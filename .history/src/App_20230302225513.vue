@@ -66,7 +66,7 @@
       </a-layout-content>
     </a-layout>
     <a-layout-footer style="text-align: center">
-      @甲蛙电子书
+      jia
     </a-layout-footer>
   </a-layout>
 </template>

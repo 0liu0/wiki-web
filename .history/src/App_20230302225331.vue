@@ -59,14 +59,14 @@
           </a-sub-menu>
         </a-menu>
       </a-layout-sider>
-      <a-layout-content
+        <a-layout-content
           :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
         >
           Content
-      </a-layout-content>
+        </a-layout-content>
     </a-layout>
     <a-layout-footer style="text-align: center">
-      @甲蛙电子书
+      Ant Design ©2018 Created by Ant UED
     </a-layout-footer>
   </a-layout>
 </template>
