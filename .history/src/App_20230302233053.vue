@@ -1,8 +1,6 @@
 <template>
   <a-layout id="components-layout-demo-top-side-2">
-    <wi-ki-header/>
     <router-view/>
-    <wi-ki-footer/>
   </a-layout>
 </template>
 
@@ -15,15 +13,12 @@ import {
 import { defineComponent, ref } from "vue";
 import { Header } from "ant-design-vue/lib/layout/layout";
 import WiKiHeader from "./components/WiKiHeader.vue";
-import WiKiFooter from "./components/WiKiFooter.vue";
 export default defineComponent({
-  name:'App',
   components: {
     UserOutlined,
     LaptopOutlined,
     NotificationOutlined,
-    WiKiHeader,
-    WiKiFooter
+    WiKiHeaderVue
   },
   setup() {
     return {

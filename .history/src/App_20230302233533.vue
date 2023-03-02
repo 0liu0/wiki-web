@@ -17,7 +17,7 @@ import { Header } from "ant-design-vue/lib/layout/layout";
 import WiKiHeader from "./components/WiKiHeader.vue";
 import WiKiFooter from "./components/WiKiFooter.vue";
 export default defineComponent({
-  name:'App',
+  name:''
   components: {
     UserOutlined,
     LaptopOutlined,
