@@ -13,7 +13,7 @@
         <a-menu-item key="3">nav 3</a-menu-item>
       </a-menu>
     </a-layout-header>
-    <router-view/>
+    <router-view />
     <a-layout-footer style="text-align: center"> @甲蛙电子书 </a-layout-footer>
   </a-layout>
 </template>

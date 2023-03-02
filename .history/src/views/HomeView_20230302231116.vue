@@ -1,5 +1,5 @@
 <template>
-  <a-layout>
+  <div>
     <a-layout-sider width="200" style="background: #fff">
       <a-menu
         v-model:selectedKeys="selectedKeys2"
@@ -55,7 +55,7 @@
     >
       Content
     </a-layout-content>
-  </a-layout>
+  </div>
 </template>
 
 <script lang="ts">
