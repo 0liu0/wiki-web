@@ -53,7 +53,9 @@
         minHeight: '280px',
       }"
     >
-    <WiKiList :ebooks="ebooks"/>
+      <pre>
+        {{ ebooks }}
+      </pre>
     </a-layout-content>
   </a-layout>
 </template>

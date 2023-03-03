@@ -53,7 +53,9 @@
         minHeight: '280px',
       }"
     >
-    <WiKiList :ebooks="ebooks"/>
+      <pre>
+        {{ ebooks }}
+      </pre>
     </a-layout-content>
   </a-layout>
 </template>
@@ -65,7 +67,7 @@ import WiKiList from "@/components/WiKiList.vue";
 export default defineComponent({
   name: "HomeView",
   components: {
-    WiKiList,
+WiKiList
   },
   setup() {
     const ebooks = ref();

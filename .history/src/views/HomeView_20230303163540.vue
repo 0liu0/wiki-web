@@ -53,7 +53,9 @@
         minHeight: '280px',
       }"
     >
-    <WiKiList :ebooks="ebooks"/>
+      <pre>
+        {{ ebooks }}
+      </pre>
     </a-layout-content>
   </a-layout>
 </template>
@@ -61,12 +63,9 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, reactive, toRef } from "vue";
 import axios from "axios";
-import WiKiList from "@/components/WiKiList.vue";
 export default defineComponent({
   name: "HomeView",
-  components: {
-    WiKiList,
-  },
+  components()
   setup() {
     const ebooks = ref();
     onMounted(() => {
