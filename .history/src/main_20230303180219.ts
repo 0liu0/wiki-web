@@ -20,7 +20,16 @@ axios.interceptors.request.use(function (config) {
     console.log('返回结果：', response);
     return response;
   }, error => {
-    console.log('返回错误:',error);
+    console.log('返回错误：', error);
+    const response = error.response;
+    const status = response.status;
+    if (status === 401) {
+      // 判断状态码是401 跳转到首页或登录页
+      console.log("未登录，跳到首页");
+      store.commit("setUser", {});
+      message.error("未登录或登录超时");
+      router.push('/');
+    }
     return Promise.reject(error);
   });
 createApp(App).use(store).use(router).use(Antd).mount('#app')

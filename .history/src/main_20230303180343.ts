@@ -20,7 +20,8 @@ axios.interceptors.request.use(function (config) {
     console.log('返回结果：', response);
     return response;
   }, error => {
-    console.log('返回错误:',error);
+    console.log('返回错误:');
+    
     return Promise.reject(error);
   });
 createApp(App).use(store).use(router).use(Antd).mount('#app')

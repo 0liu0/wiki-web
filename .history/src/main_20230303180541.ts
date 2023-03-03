@@ -21,6 +21,7 @@ axios.interceptors.request.use(function (config) {
     return response;
   }, error => {
     console.log('返回错误:',error);
+    log
     return Promise.reject(error);
   });
 createApp(App).use(store).use(router).use(Antd).mount('#app')
