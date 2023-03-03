@@ -64,8 +64,9 @@ import axios from 'axios'
 export default defineComponent({
   name: "HomeView",
   setup() {
-    axios.get("http://localhost:8880/ebook/list?name=教程").then(resp => {
-      console.log(resp);
+    axios.get("http://localhost:8880/ebook/list?name=教程").then((res)=>{
+      console.log();
+      
     })
   }
 });
