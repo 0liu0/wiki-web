@@ -7,9 +7,9 @@
       mode="horizontal"
       :style="{ lineHeight: '64px' }"
     >
-      <a-menu-item key="1"><router-link to="/">首页</router-link></a-menu-item>
-      <a-menu-item key="2"><router-link to="/admin/ebook">电子书管理</router-link></a-menu-item>
-      <a-menu-item key="3"><router-link to="/about">关于我们</router-link></a-menu-item>
+      <a-menu-item key="1">首页</a-menu-item>
+      <a-menu-item key="2">nav 2</a-menu-item>
+      <a-menu-item key="3">nav 3</a-menu-item>
     </a-menu>
   </a-layout-header>
 </template>
