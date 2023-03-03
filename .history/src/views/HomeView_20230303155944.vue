@@ -54,14 +54,12 @@
       }"
     >
       <pre>
-        {{ ebooks }}
-      </pre>
     </a-layout-content>
   </a-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, reactive, toRef } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import axios from "axios";
 export default defineComponent({
   name: "HomeView",
@@ -70,11 +68,11 @@ export default defineComponent({
     onMounted(() => {
       console.log("onmouted");
       axios.get("http://localhost:8880/ebook/list?name=教程").then((resp) => {
-        ebooks.value = resp.data.content;
+        ebooks.value = resp.data.content
         console.log(ebooks);
       });
     });
-    return { ebooks };
+    return {ebooks}
   },
 });
 </script>
