@@ -12,7 +12,7 @@
         v-model:value="value"
         placeholder="input search text"
         enter-button
-        @search="onSearch(value)"
+        @search="onSearch"
       />
       <a-button type="primary" @click="add"> 新增 </a-button>
     </a-space>
@@ -213,30 +213,9 @@ export default defineComponent({
         size: pagination.pageSize,
       });
     };
-    const onSearch = (value: string) => {
-      console.log(value);
-      if (value != "") {
-        let obj = {
-          name: value,
-          page: pagination.value.current,
-          size: pagination.value.pageSize,
-        };
-        axios.get("/ebook/list", { params: obj }).then((resp) => {
-          const data = resp.data;
-          if (data.success&&data.content.total!=0) {
-            ebooks.value = data.content.list;
-            pagination.value.total = data.content.total
-          } else {
-            message.error("抱歉，没有取值相对应的名称");
-          }
-        });
-      } else {
-        handleQuery({
-          page: 1,
-          size: pagination.value.pageSize,
-        });
-      }
-    };
+    // const onSearch = () => {
+    //   axios
+    // };
     onMounted(() => {
       handleQuery({
         page: 1,
@@ -249,7 +228,7 @@ export default defineComponent({
       pagination,
       loading,
       value,
-      onSearch,
+      // onSearch,
       handleTableChange,
       edit,
       add,

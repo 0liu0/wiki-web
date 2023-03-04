@@ -223,9 +223,9 @@ export default defineComponent({
         };
         axios.get("/ebook/list", { params: obj }).then((resp) => {
           const data = resp.data;
-          if (data.success&&data.content.total!=0) {
+          if (data.success) {
             ebooks.value = data.content.list;
-            pagination.value.total = data.content.total
+            pagination.value.total = data.content.
           } else {
             message.error("抱歉，没有取值相对应的名称");
           }

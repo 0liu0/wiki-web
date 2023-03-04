@@ -12,7 +12,7 @@
         v-model:value="value"
         placeholder="input search text"
         enter-button
-        @search="onSearch(value)"
+        @search="onSearch"
       />
       <a-button type="primary" @click="add"> 新增 </a-button>
     </a-space>
@@ -79,7 +79,7 @@ import { message } from "ant-design-vue";
 export default defineComponent({
   name: "AdminEBookView",
   setup() {
-    const value = ref();
+    const name = ref();
     const ebooks = ref();
     const pagination = ref({
       current: 1,
@@ -213,29 +213,8 @@ export default defineComponent({
         size: pagination.pageSize,
       });
     };
-    const onSearch = (value: string) => {
-      console.log(value);
-      if (value != "") {
-        let obj = {
-          name: value,
-          page: pagination.value.current,
-          size: pagination.value.pageSize,
-        };
-        axios.get("/ebook/list", { params: obj }).then((resp) => {
-          const data = resp.data;
-          if (data.success&&data.content.total!=0) {
-            ebooks.value = data.content.list;
-            pagination.value.total = data.content.total
-          } else {
-            message.error("抱歉，没有取值相对应的名称");
-          }
-        });
-      } else {
-        handleQuery({
-          page: 1,
-          size: pagination.value.pageSize,
-        });
-      }
+    const onSearch = () => {
+      axios.
     };
     onMounted(() => {
       handleQuery({
@@ -248,7 +227,7 @@ export default defineComponent({
       ebooks,
       pagination,
       loading,
-      value,
+      name,
       onSearch,
       handleTableChange,
       edit,

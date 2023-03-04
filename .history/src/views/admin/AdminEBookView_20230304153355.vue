@@ -7,15 +7,14 @@
       minHeight: '280px',
     }"
   >
-    <a-space :size="small">
-      <a-input-search
-        v-model:value="value"
-        placeholder="input search text"
-        enter-button
-        @search="onSearch(value)"
-      />
-      <a-button type="primary" @click="add"> 新增 </a-button>
-    </a-space>
+  <a-space :size="size">
+    <a-input-search
+      v-model:value="value"
+      placeholder="input search text"
+      style="width: 200px"
+      @search="onSearch"
+    />
+    <a-button type="primary" @click="add"> 新增 </a-button>
     <a-table
       :columns="columns"
       :row-key="(record) => record.id"
@@ -79,7 +78,6 @@ import { message } from "ant-design-vue";
 export default defineComponent({
   name: "AdminEBookView",
   setup() {
-    const value = ref();
     const ebooks = ref();
     const pagination = ref({
       current: 1,
@@ -213,30 +211,6 @@ export default defineComponent({
         size: pagination.pageSize,
       });
     };
-    const onSearch = (value: string) => {
-      console.log(value);
-      if (value != "") {
-        let obj = {
-          name: value,
-          page: pagination.value.current,
-          size: pagination.value.pageSize,
-        };
-        axios.get("/ebook/list", { params: obj }).then((resp) => {
-          const data = resp.data;
-          if (data.success&&data.content.total!=0) {
-            ebooks.value = data.content.list;
-            pagination.value.total = data.content.total
-          } else {
-            message.error("抱歉，没有取值相对应的名称");
-          }
-        });
-      } else {
-        handleQuery({
-          page: 1,
-          size: pagination.value.pageSize,
-        });
-      }
-    };
     onMounted(() => {
       handleQuery({
         page: 1,
@@ -248,8 +222,6 @@ export default defineComponent({
       ebooks,
       pagination,
       loading,
-      value,
-      onSearch,
       handleTableChange,
       edit,
       add,

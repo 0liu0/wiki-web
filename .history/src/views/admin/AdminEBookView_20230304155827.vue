@@ -207,7 +207,6 @@ export default defineComponent({
 
     // 表格点击页码时触发
     const handleTableChange = (pagination: any) => {
-      console.log("看看自带的分页参数都有啥:" + pagination);
       handleQuery({
         page: pagination.current,
         size: pagination.pageSize,
@@ -223,9 +222,8 @@ export default defineComponent({
         };
         axios.get("/ebook/list", { params: obj }).then((resp) => {
           const data = resp.data;
-          if (data.success&&data.content.total!=0) {
-            ebooks.value = data.content.list;
-            pagination.value.total = data.content.total
+          if (data.success) {
+            ebooks.value = data.content;
           } else {
             message.error("抱歉，没有取值相对应的名称");
           }
