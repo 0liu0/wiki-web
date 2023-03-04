@@ -160,7 +160,7 @@ export default defineComponent({
         } else {
           modalVisible.value = false;
           modalLoading.value = false;
-          message.error(data.message);
+          message.error(data.me);
         }
       });
     };

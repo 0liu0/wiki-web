@@ -74,7 +74,7 @@ export default defineComponent({
     const ebooks = ref();
     const pagination = ref({
       current: 1,
-      pageSize: 4,
+      pageSize: 1000,
       total: 0,
     });
     const loading = ref(false);
@@ -160,7 +160,7 @@ export default defineComponent({
         } else {
           modalVisible.value = false;
           modalLoading.value = false;
-          message.error(data.message);
+          message.error("网络异常，请稍后再试");
         }
       });
     };
