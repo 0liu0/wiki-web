@@ -76,7 +76,6 @@
 import { defineComponent, ref, onMounted } from "vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
-import {Tool} from '@/util/tool';
 export default defineComponent({
   name: "AdminEBookView",
   setup() {
@@ -182,7 +181,8 @@ export default defineComponent({
     // 编辑表单
     const edit = (record: any) => {
       modalVisible.value = true;
-      ebook.value = Tool.copy(record)
+      let obj = record;
+      ebook.value = obj;
     };
     // 删除提示框
     const confirm = (id: any) => {

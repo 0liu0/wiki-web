@@ -76,7 +76,7 @@
 import { defineComponent, ref, onMounted } from "vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
-import {Tool} from '@/util/tool';
+im
 export default defineComponent({
   name: "AdminEBookView",
   setup() {
