@@ -85,7 +85,7 @@ export default defineComponent({
             ebooks.value = resp.data.content.list;
             // 重置分页按钮
           }else {
-            message.error(data.message)
+            message.error(daya.message)
           }
         });
     });

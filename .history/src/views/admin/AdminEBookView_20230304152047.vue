@@ -74,7 +74,7 @@ export default defineComponent({
     const ebooks = ref();
     const pagination = ref({
       current: 1,
-      pageSize: 1001,
+      pageSize: 4,
       total: 0,
     });
     const loading = ref(false);
@@ -128,13 +128,11 @@ export default defineComponent({
         .then((resp) => {
           loading.value = false;
           const data = resp.data;
-          if (data.success) {
+          if(data.success){
             ebooks.value = data.content.list;
-            // 重置分页按钮
-            pagination.value.current = params.page;
-            pagination.value.total = data.content.total;
-          }else {
-            message.error(data.message)
+          // 重置分页按钮
+          pagination.value.current = params.page;
+          pagination.value.total = data.content.total;
           }
         });
     };
@@ -176,7 +174,7 @@ export default defineComponent({
     };
     // 删除提示框
     const confirm = (id: any) => {
-      axios.delete("/ebook/delete/" + id).then((resp) => {
+      axios.delete('/ebook/delete/'+id).then((resp) => {
         const data = resp.data;
         if (data.success) {
           // 重新加载列表
@@ -193,7 +191,7 @@ export default defineComponent({
 
     const cancel = (e: MouseEvent) => {
       console.log(e);
-      message.info("已取消");
+      message.info("已取消")
     };
 
     // 表格点击页码时触发

@@ -1,5 +1,5 @@
 <template>
-  <a-layout>
+  <a-layout >
     <a-layout-sider width="200" style="background: #fff">
       <a-menu
         v-model:selectedKeys="selectedKeys2"
@@ -62,7 +62,7 @@
 import { defineComponent, onMounted, ref, reactive, toRef } from "vue";
 import axios from "axios";
 import WiKiList from "@/components/WiKiList.vue";
-import { message, Pagination } from "ant-design-vue";
+import { message } from "ant-design-vue";
 export default defineComponent({
   name: "HomeView",
   components: {
@@ -76,16 +76,15 @@ export default defineComponent({
         .get("/ebook/list", {
           params: {
             page: 1,
-            size: 1000,
+            size: 1010,
           },
         })
         .then((resp) => {
           const data = resp.data;
           if (data.success) {
             ebooks.value = resp.data.content.list;
-            // 重置分页按钮
           }else {
-            message.error(data.message)
+            message.error("网络延迟较大，请稍后重试！")
           }
         });
     });

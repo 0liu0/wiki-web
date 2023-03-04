@@ -74,7 +74,7 @@ export default defineComponent({
     const ebooks = ref();
     const pagination = ref({
       current: 1,
-      pageSize: 1001,
+      pageSize: 4,
       total: 0,
     });
     const loading = ref(false);
@@ -134,7 +134,7 @@ export default defineComponent({
             pagination.value.current = params.page;
             pagination.value.total = data.content.total;
           }else {
-            message.error(data.message)
+            message.error
           }
         });
     };

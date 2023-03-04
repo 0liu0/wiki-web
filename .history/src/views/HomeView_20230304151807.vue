@@ -84,8 +84,9 @@ export default defineComponent({
           if (data.success) {
             ebooks.value = resp.data.content.list;
             // 重置分页按钮
+            Pagination.val
           }else {
-            message.error(data.message)
+            message.error("网络延迟较大，请稍后重试！")
           }
         });
     });

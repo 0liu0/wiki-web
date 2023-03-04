@@ -62,7 +62,6 @@
 import { defineComponent, onMounted, ref, reactive, toRef } from "vue";
 import axios from "axios";
 import WiKiList from "@/components/WiKiList.vue";
-import { message, Pagination } from "ant-design-vue";
 export default defineComponent({
   name: "HomeView",
   components: {
@@ -76,17 +75,12 @@ export default defineComponent({
         .get("/ebook/list", {
           params: {
             page: 1,
-            size: 1000,
+            size: 1001,
           },
         })
         .then((resp) => {
-          const data = resp.data;
-          if (data.success) {
-            ebooks.value = resp.data.content.list;
-            // 重置分页按钮
-          }else {
-            message.error(data.message)
-          }
+          ebooks.value = resp.data.content.list;
+          console.log(ebooks);
         });
     });
     return { ebooks };
