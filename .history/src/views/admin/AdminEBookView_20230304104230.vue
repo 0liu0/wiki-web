@@ -20,41 +20,23 @@
       </template>
       <template v-slot:action="{ text, record }">
         <a-space size="small">
-          <a-button type="primary" @click="edit(record)"> 编辑 </a-button>
+          <a-button type="primary"> 编辑 </a-button>
           <a-button type="danger"> 删除 </a-button>
         </a-space>
       </template>
     </a-table>
   </a-layout-content>
   <a-modal
-    title="电子书表单"
-    v-model:visible="modalVisible"
-    :confirm-loading="modalLoading"
-    @ok="handleOk"
-    :mask="true"
-  >
-    <a-form :model="ebook" :labelCol="{ span: 6 }">
-      <a-form-item label="封面">
-        <a-input v-model:value="ebook.cover" />
-      </a-form-item>
-      <a-form-item label="名称">
-        <a-input v-model:value="ebook.name" />
-      </a-form-item>
-      <a-form-item label="分类一">
-        <a-input v-model:value="ebook.category1Id" />
-      </a-form-item>
-      <a-form-item label="分类二">
-        <a-input v-model:value="ebook.category2Id" />
-      </a-form-item>
-      <a-form-item label="描述">
-        <a-input v-model:value="ebook.desc" type="text" />
-      </a-form-item>
-    </a-form>
-  </a-modal>
+      title="电子书表单"
+      :confirm-loading="confirmLoading"
+      @ok="handleOk"
+    >
+      <p>{{ modalText }}</p>
+    </a-modal>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref ,onMounted} from "vue";
 import axios from "axios";
 export default defineComponent({
   name: "AdminEBookView",
@@ -106,39 +88,19 @@ export default defineComponent({
     // 数据查询
     const handleQuery = (params: any) => {
       loading.value = true;
-      axios
-        .get("/ebook/list", {
-          params: {
-            page: params.page,
-            size: params.size,
-          },
-        })
-        .then((resp) => {
-          loading.value = false;
-          const data = resp.data;
-          ebooks.value = data.content.list;
-          // 重置分页按钮
-          pagination.value.current = params.page;
-          pagination.value.total = data.content.total;
-        });
-    };
-
-    // 控制表单的显现
-    const modalLoading = ref(false);
-    const modalVisible = ref(false);
-    const handleOk = () => {
-      modalVisible.value = true;
-      modalLoading.value = true;
-      setTimeout(() => {
-        modalVisible.value = false;
-        modalLoading.value = false;
-      }, 2000);
-    };
-    // 编辑表单
-    const ebook = ref({})
-    const edit = (record:any) => {
-      modalVisible.value = true;
-      ebook.value = record
+      axios.get("/ebook/list", {
+        params:{
+          page: params.page,
+          size: params.size
+        }
+        }).then((resp) => {
+        loading.value = false;
+        const data = resp.data;
+        ebooks.value = data.content.list;
+        // 重置分页按钮
+        pagination.value.current = params.page;
+        pagination.value.total = data.content.total
+      });
     };
 
     // 表格点击页码时触发
@@ -149,23 +111,18 @@ export default defineComponent({
         size: pagination.pageSize,
       });
     };
-    onMounted(() => {
-      handleQuery({
-        page: 1,
-        size: pagination.value.pageSize,
-      });
-    });
+    onMounted(()=> {
+        handleQuery({
+            page:1,
+            size: pagination.value.pageSize
+        })
+    })
     return {
       columns,
       ebooks,
       pagination,
       loading,
-      handleTableChange,
-      edit,
-      modalVisible,
-      modalLoading,
-      handleOk,
-      ebook
+      handleTableChange
     };
   },
 });
@@ -173,10 +130,10 @@ export default defineComponent({
 
 <style scoped>
 .cover {
-  width: 50px;
-  height: 50px;
-  border-radius: 8%;
-  line-height: 50px;
-  margin: 5px 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 8%;
+    line-height: 50px;
+    margin: 5px 0;
 }
 </style>

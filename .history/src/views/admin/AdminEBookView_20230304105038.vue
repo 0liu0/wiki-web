@@ -20,7 +20,7 @@
       </template>
       <template v-slot:action="{ text, record }">
         <a-space size="small">
-          <a-button type="primary" @click="edit(record)"> 编辑 </a-button>
+          <a-button type="primary" @click="edit"> 编辑 </a-button>
           <a-button type="danger"> 删除 </a-button>
         </a-space>
       </template>
@@ -30,26 +30,9 @@
     title="电子书表单"
     v-model:visible="modalVisible"
     :confirm-loading="modalLoading"
-    @ok="handleOk"
-    :mask="true"
+    @ok="handleModalOk"
   >
-    <a-form :model="ebook" :labelCol="{ span: 6 }">
-      <a-form-item label="封面">
-        <a-input v-model:value="ebook.cover" />
-      </a-form-item>
-      <a-form-item label="名称">
-        <a-input v-model:value="ebook.name" />
-      </a-form-item>
-      <a-form-item label="分类一">
-        <a-input v-model:value="ebook.category1Id" />
-      </a-form-item>
-      <a-form-item label="分类二">
-        <a-input v-model:value="ebook.category2Id" />
-      </a-form-item>
-      <a-form-item label="描述">
-        <a-input v-model:value="ebook.desc" type="text" />
-      </a-form-item>
-    </a-form>
+    <p>刘祖彻</p>
   </a-modal>
 </template>
 
@@ -126,19 +109,16 @@ export default defineComponent({
     // 控制表单的显现
     const modalLoading = ref(false);
     const modalVisible = ref(false);
-    const handleOk = () => {
-      modalVisible.value = true;
-      modalLoading.value = true;
+    const handleModalOk = () => {
+      modalVisible.value = false
       setTimeout(() => {
         modalVisible.value = false;
         modalLoading.value = false;
       }, 2000);
     };
     // 编辑表单
-    const ebook = ref({})
-    const edit = (record:any) => {
+    const edit = () => {
       modalVisible.value = true;
-      ebook.value = record
     };
 
     // 表格点击页码时触发
@@ -164,8 +144,7 @@ export default defineComponent({
       edit,
       modalVisible,
       modalLoading,
-      handleOk,
-      ebook
+      handleModalOk
     };
   },
 });

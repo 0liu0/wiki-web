@@ -20,7 +20,7 @@
       </template>
       <template v-slot:action="{ text, record }">
         <a-space size="small">
-          <a-button type="primary" @click="edit(record)"> 编辑 </a-button>
+          <a-button type="primary" @click="edit"> 编辑 </a-button>
           <a-button type="danger"> 删除 </a-button>
         </a-space>
       </template>
@@ -33,23 +33,32 @@
     @ok="handleOk"
     :mask="true"
   >
-    <a-form :model="ebook" :labelCol="{ span: 6 }">
-      <a-form-item label="封面">
-        <a-input v-model:value="ebook.cover" />
-      </a-form-item>
-      <a-form-item label="名称">
-        <a-input v-model:value="ebook.name" />
-      </a-form-item>
-      <a-form-item label="分类一">
-        <a-input v-model:value="ebook.category1Id" />
-      </a-form-item>
-      <a-form-item label="分类二">
-        <a-input v-model:value="ebook.category2Id" />
-      </a-form-item>
-      <a-form-item label="描述">
-        <a-input v-model:value="ebook.desc" type="text" />
-      </a-form-item>
-    </a-form>
+    <a-form
+    :model="formState"
+    v-bind="layout"
+    name="nest-messages"
+    :validate-messages="validateMessages"
+    @finish="onFinish"
+  >
+    <a-form-item :name="['user', 'name']" label="Name" :rules="[{ required: true }]">
+      <a-input v-model:value="formState.user.name" />
+    </a-form-item>
+    <a-form-item :name="['user', 'email']" label="Email" :rules="[{ type: 'email' }]">
+      <a-input v-model:value="formState.user.email" />
+    </a-form-item>
+    <a-form-item :name="['user', 'age']" label="Age" :rules="[{ type: 'number', min: 0, max: 99 }]">
+      <a-input-number v-model:value="formState.user.age" />
+    </a-form-item>
+    <a-form-item :name="['user', 'website']" label="Website">
+      <a-input v-model:value="formState.user.website" />
+    </a-form-item>
+    <a-form-item :name="['user', 'introduction']" label="Introduction">
+      <a-textarea v-model:value="formState.user.introduction" />
+    </a-form-item>
+    <a-form-item :wrapper-col="{ ...layout.wrapperCol, offset: 8 }">
+      <a-button type="primary" html-type="submit">Submit</a-button>
+    </a-form-item>
+  </a-form>
   </a-modal>
 </template>
 
@@ -127,18 +136,16 @@ export default defineComponent({
     const modalLoading = ref(false);
     const modalVisible = ref(false);
     const handleOk = () => {
-      modalVisible.value = true;
-      modalLoading.value = true;
+      modalVisible.value = true
+      modalLoading.value = true
       setTimeout(() => {
-        modalVisible.value = false;
-        modalLoading.value = false;
-      }, 2000);
+        modalVisible.value = false
+        modalLoading.value = false
+      }, 2000)
     };
     // 编辑表单
-    const ebook = ref({})
-    const edit = (record:any) => {
+    const edit = () => {
       modalVisible.value = true;
-      ebook.value = record
     };
 
     // 表格点击页码时触发
@@ -164,8 +171,7 @@ export default defineComponent({
       edit,
       modalVisible,
       modalLoading,
-      handleOk,
-      ebook
+      handleOk
     };
   },
 });

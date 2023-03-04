@@ -135,10 +135,9 @@ export default defineComponent({
       }, 2000);
     };
     // 编辑表单
-    const ebook = ref({})
-    const edit = (record:any) => {
+    
+    const edit = () => {
       modalVisible.value = true;
-      ebook.value = record
     };
 
     // 表格点击页码时触发
@@ -165,7 +164,6 @@ export default defineComponent({
       modalVisible,
       modalLoading,
       handleOk,
-      ebook
     };
   },
 });

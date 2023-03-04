@@ -165,7 +165,7 @@ export default defineComponent({
       modalVisible,
       modalLoading,
       handleOk,
-      ebook
+      eboo
     };
   },
 });

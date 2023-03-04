@@ -53,7 +53,7 @@
         minHeight: '280px',
       }"
     >
-      <WiKiList :ebooks="ebooks" />
+    <WiKiList :ebooks="ebooks"/>
     </a-layout-content>
   </a-layout>
 </template>
@@ -71,17 +71,14 @@ export default defineComponent({
     const ebooks = ref();
     onMounted(() => {
       console.log("onmouted");
-      axios
-        .get("/ebook/list", {
-          params: {
-            page: 1,
-            size: 1000,
-          },
-        })
-        .then((resp) => {
-          ebooks.value = resp.data.content.list;
-          console.log(ebooks);
-        });
+      axios.get("/ebook/list",{
+        params:{
+          page
+        }
+      }).then((resp) => {
+        ebooks.value = resp.data.content.list;
+        console.log(ebooks);
+      });
     });
     return { ebooks };
   },

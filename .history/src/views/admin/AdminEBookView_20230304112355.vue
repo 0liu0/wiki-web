@@ -19,7 +19,7 @@
         <img class="cover" v-if="cover" :src="cover" alt="avatar" />
       </template>
       <template v-slot:action="{ text, record }">
-        <a-space size="small">
+        <a-space size="big">
           <a-button type="primary" @click="edit(record)"> 编辑 </a-button>
           <a-button type="danger"> 删除 </a-button>
         </a-space>
@@ -135,10 +135,8 @@ export default defineComponent({
       }, 2000);
     };
     // 编辑表单
-    const ebook = ref({})
-    const edit = (record:any) => {
+    const edit = () => {
       modalVisible.value = true;
-      ebook.value = record
     };
 
     // 表格点击页码时触发
@@ -165,7 +163,6 @@ export default defineComponent({
       modalVisible,
       modalLoading,
       handleOk,
-      ebook
     };
   },
 });
