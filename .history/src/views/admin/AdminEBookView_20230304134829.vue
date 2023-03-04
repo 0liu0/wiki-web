@@ -182,7 +182,7 @@ export default defineComponent({
           });
           message.success("删除成功！");
         } else {
-          message.info("请稍后再试");
+          message.info("qing");
         }
       });
     };

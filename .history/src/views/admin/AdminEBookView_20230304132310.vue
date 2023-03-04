@@ -24,10 +24,10 @@
           <a-button type="primary" @click="edit(record)"> 编辑 </a-button>
           <a-button type="danger">
             <a-popconfirm
-              title="确认删除这本书吗?"
-              ok-text="是的"
-              cancel-text="我再想想"
-              @confirm="confirm(record.id)"
+              title="Are you sure delete this task?"
+              ok-text="Yes"
+              cancel-text="No"
+              @confirm="confirm"
               @cancel="cancel"
             >
               <a href="#">删除</a>
@@ -170,26 +170,15 @@ export default defineComponent({
       modalVisible.value = true;
       ebook.value = record;
     };
-    // 删除提示框
-    const confirm = (id: any) => {
-      axios.delete('/ebook/delete/'+id).then((resp) => {
-        const data = resp.data;
-        if (data.success) {
-          // 重新加载列表
-          handleQuery({
-            page: pagination.value.current,
-            size: pagination.value.pageSize,
-          });
-          message.success("删除成功！");
-        } else {
-          message.info("请稍后再试");
-        }
-      });
+    // 
+    const confirm = (e: MouseEvent) => {
+      console.log(e);
+      message.success("Click on Yes");
     };
 
     const cancel = (e: MouseEvent) => {
       console.log(e);
-      message.info("已取消")
+      message.error("Click on No");
     };
 
     // 表格点击页码时触发
@@ -214,8 +203,6 @@ export default defineComponent({
       handleTableChange,
       edit,
       add,
-      cancel,
-      confirm,
       modalVisible,
       modalLoading,
       handleOk,

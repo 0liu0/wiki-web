@@ -180,16 +180,16 @@ export default defineComponent({
             page: pagination.value.current,
             size: pagination.value.pageSize,
           });
-          message.success("删除成功！");
+          message.success("Click on Yes");
         } else {
-          message.info("请稍后再试");
+          message.error("Click on Yes");
         }
       });
     };
 
     const cancel = (e: MouseEvent) => {
       console.log(e);
-      message.info("已取消")
+      message.error("Click on No");
     };
 
     // 表格点击页码时触发

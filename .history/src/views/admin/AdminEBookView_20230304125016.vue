@@ -7,7 +7,7 @@
       minHeight: '280px',
     }"
   >
-    <a-button type="primary" size="large" @click="add"> 新增 </a-button>
+  <a-button type="primary" size="big"> 新增 </a-button>
     <a-table
       :columns="columns"
       :row-key="(record) => record.id"
@@ -22,17 +22,7 @@
       <template v-slot:action="{ text, record }">
         <a-space size="small">
           <a-button type="primary" @click="edit(record)"> 编辑 </a-button>
-          <a-button type="danger">
-            <a-popconfirm
-              title="确认删除这本书吗?"
-              ok-text="是的"
-              cancel-text="我再想想"
-              @confirm="confirm(record.id)"
-              @cancel="cancel"
-            >
-              <a href="#">删除</a>
-            </a-popconfirm>
-          </a-button>
+          <a-button type="danger"> 删除 </a-button>
         </a-space>
       </template>
     </a-table>
@@ -147,7 +137,7 @@ export default defineComponent({
         if (data.success) {
           modalVisible.value = false;
           modalLoading.value = false;
-          message.success("操作成功！");
+          message.success("修改成功");
           // 重新加载列表
           handleQuery({
             page: pagination.value.current,
@@ -160,36 +150,10 @@ export default defineComponent({
         }
       });
     };
-    // 新增接口
-    const add = () => {
-      modalVisible.value = true;
-      ebook.value = {};
-    };
     // 编辑表单
     const edit = (record: any) => {
       modalVisible.value = true;
       ebook.value = record;
-    };
-    // 删除提示框
-    const confirm = (id: any) => {
-      axios.delete('/ebook/delete/'+id).then((resp) => {
-        const data = resp.data;
-        if (data.success) {
-          // 重新加载列表
-          handleQuery({
-            page: pagination.value.current,
-            size: pagination.value.pageSize,
-          });
-          message.success("删除成功！");
-        } else {
-          message.info("请稍后再试");
-        }
-      });
-    };
-
-    const cancel = (e: MouseEvent) => {
-      console.log(e);
-      message.info("已取消")
     };
 
     // 表格点击页码时触发
@@ -213,9 +177,6 @@ export default defineComponent({
       loading,
       handleTableChange,
       edit,
-      add,
-      cancel,
-      confirm,
       modalVisible,
       modalLoading,
       handleOk,
