@@ -12,14 +12,14 @@
         v-model:value="param.name"
         placeholder="input search text"
         enter-button
-        @search="handleQuery({page:1,size:pagination.pageSize})"
+        @search="onSearch(value)"
       />
       <a-button type="primary" @click="add"> 新增 </a-button>
     </a-space>
     <a-table
       :columns="columns"
       :row-key="(record) => record.id"
-      :data-source="ebooks"
+      :data-source="categorys"
       :pagination="pagination"
       :loading="loading"
       @change="handleTableChange"
@@ -46,28 +46,23 @@
     </a-table>
   </a-layout-content>
   <a-modal
-    title="电子书表单"
+    title="分类表单"
     v-model:visible="modalVisible"
     :confirm-loading="modalLoading"
     @ok="handleOk"
     :mask="true"
   >
-    <a-form :model="ebook" :labelCol="{ span: 6 }">
-      <a-form-item label="封面">
-        <a-input v-model:value="ebook.cover" />
-      </a-form-item>
+    <a-form :model="category" :labelCol="{ span: 6 }">
       <a-form-item label="名称">
-        <a-input v-model:value="ebook.name" />
+        <a-input v-model:value="category.name" />
       </a-form-item>
-      <a-form-item label="分类一">
-        <a-input v-model:value="ebook.category1Id" />
+      <a-form-item label="父分类">
+        <a-input v-model:value="category.parent" />
       </a-form-item>
-      <a-form-item label="分类二">
-        <a-input v-model:value="ebook.category2Id" />
+      <a-form-item label="顺序">
+        <a-input v-model:value="category.sort" />
       </a-form-item>
-      <a-form-item label="描述">
-        <a-input v-model:value="ebook.description" type="text" />
-      </a-form-item>
+
     </a-form>
   </a-modal>
 </template>
@@ -78,11 +73,10 @@ import axios from "axios";
 import { message } from "ant-design-vue";
 import {Tool} from '@/util/tool';
 export default defineComponent({
-  name: "AdminEBookView",
+  name: "AdminCategoryView",
   setup() {
-    const param = ref();
-    param.value = {};
-    const ebooks = ref();
+    const value = ref();
+    const categorys = ref();
     const pagination = ref({
       current: 1,
       pageSize: 4,
@@ -91,34 +85,17 @@ export default defineComponent({
     const loading = ref(false);
     const columns = [
       {
-        title: "封面",
-        dataIndex: "cover",
-        slots: { customRender: "cover" },
-      },
-      {
         title: "名称",
         dataIndex: "name",
       },
       {
-        title: "分类一",
-        key: "category1Id",
-        dataIndex: "category1Id",
+        title: "父分类",
+        key: "parent",
+        dataIndex: "parent",
       },
       {
-        title: "分类二",
-        key: "category2Id",
-      },
-      {
-        title: "文档数",
-        dataIndex: "docCount",
-      },
-      {
-        title: "阅读数",
-        dataIndex: "viewCount",
-      },
-      {
-        title: "点赞数",
-        dataIndex: "voteCount",
+        title: "顺序",
+        dataIndex: "sort",
       },
       {
         title: "Action",
@@ -130,18 +107,17 @@ export default defineComponent({
     const handleQuery = (params: any) => {
       loading.value = true;
       axios
-        .get("/ebook/list", {
+        .get("/category/list", {
           params: {
             page: params.page,
             size: params.size,
-            name: param.value.name
           },
         })
         .then((resp) => {
           loading.value = false;
           const data = resp.data;
           if (data.success) {
-            ebooks.value = data.content.list;
+            categorys.value = data.content.list;
             // 重置分页按钮
             pagination.value.current = params.page;
             pagination.value.total = data.content.total;
@@ -154,11 +130,11 @@ export default defineComponent({
     // 控制表单的显现
     const modalLoading = ref(false);
     const modalVisible = ref(false);
-    const ebook = ref({});
+    const category = ref({});
     const handleOk = () => {
       modalVisible.value = true;
       modalLoading.value = true;
-      axios.post("/ebook/save", ebook.value).then((resp) => {
+      axios.post("/category/save", category.value).then((resp) => {
         const data = resp.data;
         if (data.success) {
           modalVisible.value = false;
@@ -179,16 +155,16 @@ export default defineComponent({
     // 新增接口
     const add = () => {
       modalVisible.value = true;
-      ebook.value = {};
+      category.value = {};
     };
     // 编辑表单
     const edit = (record: any) => {
       modalVisible.value = true;
-      ebook.value = Tool.copy(record)
+      category.value = Tool.copy(record)
     };
     // 删除提示框
     const confirm = (id: any) => {
-      axios.delete("/ebook/delete/" + id).then((resp) => {
+      axios.delete("/category/delete/" + id).then((resp) => {
         const data = resp.data;
         if (data.success) {
           // 重新加载列表
@@ -216,6 +192,30 @@ export default defineComponent({
         size: pagination.pageSize,
       });
     };
+    const onSearch = (value: string) => {
+      console.log(value);
+      if (value != "") {
+        let obj = {
+          name: value,
+          page: 1,
+          size: pagination.value.pageSize,
+        };
+        axios.get("/category/list", { params: obj }).then((resp) => {
+          const data = resp.data;
+          if (data.success&&data.content.total!=0) {
+            categorys.value = data.content.list;
+            pagination.value.total = data.content.total
+          } else {
+            message.error("抱歉，没有取值相对应的名称");
+          }
+        });
+      } else {
+        handleQuery({
+          page: 1,
+          size: pagination.value.pageSize,
+        });
+      }
+    };
     onMounted(() => {
       handleQuery({
         page: 1,
@@ -224,10 +224,11 @@ export default defineComponent({
     });
     return {
       columns,
-      ebooks,
+      categorys,
       pagination,
       loading,
-      param,
+      value,
+      onSearch,
       handleTableChange,
       edit,
       add,
@@ -236,8 +237,7 @@ export default defineComponent({
       modalVisible,
       modalLoading,
       handleOk,
-      handleQuery,
-      ebook,
+      category,
     };
   },
 });

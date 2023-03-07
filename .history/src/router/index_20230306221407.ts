@@ -21,9 +21,9 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/admin/AdminEBookView.vue')
   },
   {
-    path: '/admin/category',
-    name: 'adminecategory',
-    component: () => import('../views/admin/AdminCategoryView.vue')
+    path: '/admin/ebook',
+    name: 'adminebook',
+    component: () => import('../views/admin/AdminEBookView.vue')
   }
 ]
 

@@ -9,10 +9,10 @@
   >
     <a-space :size="small">
       <a-input-search
-        v-model:value="param.name"
+        v-model:value="value"
         placeholder="input search text"
         enter-button
-        @search="handleQuery({page:1,size:pagination.pageSize})"
+        @search="handleQuery({page:1,size:pagination.pageSize,name:value})"
       />
       <a-button type="primary" @click="add"> 新增 </a-button>
     </a-space>
@@ -80,8 +80,7 @@ import {Tool} from '@/util/tool';
 export default defineComponent({
   name: "AdminEBookView",
   setup() {
-    const param = ref();
-    param.value = {};
+    const value = ref();
     const ebooks = ref();
     const pagination = ref({
       current: 1,
@@ -134,7 +133,7 @@ export default defineComponent({
           params: {
             page: params.page,
             size: params.size,
-            name: param.value.name
+            name: params.name
           },
         })
         .then((resp) => {
@@ -216,6 +215,30 @@ export default defineComponent({
         size: pagination.pageSize,
       });
     };
+    const onSearch = (value: string) => {
+      console.log(value);
+      if (value != "") {
+        let obj = {
+          name: value,
+          page: 1,
+          size: pagination.value.pageSize,
+        };
+        axios.get("/ebook/list", { params: obj }).then((resp) => {
+          const data = resp.data;
+          if (data.success&&data.content.total!=0) {
+            ebooks.value = data.content.list;
+            pagination.value.total = data.content.total
+          } else {
+            message.error("抱歉，没有取值相对应的名称");
+          }
+        });
+      } else {
+        handleQuery({
+          page: 1,
+          size: pagination.value.pageSize,
+        });
+      }
+    };
     onMounted(() => {
       handleQuery({
         page: 1,
@@ -227,7 +250,8 @@ export default defineComponent({
       ebooks,
       pagination,
       loading,
-      param,
+      value,
+      onSearch,
       handleTableChange,
       edit,
       add,
@@ -236,7 +260,6 @@ export default defineComponent({
       modalVisible,
       modalLoading,
       handleOk,
-      handleQuery,
       ebook,
     };
   },
