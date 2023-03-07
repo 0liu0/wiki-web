@@ -51,17 +51,18 @@
         <a-input v-model:value="category.name" />
       </a-form-item>
       <a-form-item label="父分类">
-        <a-select v-model:value="category.parent" ref="select">
-          <a-select-option value="0"> 无 </a-select-option>
-          <a-select-option
-            v-for="(c, index) in level1"
-            :key="c.id"
-            :value="c.id"
-            :disabled="category.id === c.id"
-          >
-          {{c.name}}
-          </a-select-option>
-        </a-select>
+        <a-input v-model:value="category.parent" />
+          <a-select
+    v-model:value="value"
+    show-search
+    placeholder="Select a person"
+    style="width: 200px"
+    :options="options"
+    :filter-option="filterOption"
+    @focus="handleFocus"
+    @blur="handleBlur"
+    @change="handleChange"
+  ></a-select>
       </a-form-item>
       <a-form-item label="顺序">
         <a-input v-model:value="category.sort" />
@@ -111,10 +112,10 @@ export default defineComponent({
         const data = resp.data;
         if (data.success) {
           categorys.value = data.content.list;
-          console.log("原始数组：" + categorys.value);
+          console.log('原始数组：'+categorys.value);
           level1.value = [];
           level1.value = Tool.array2Tree(categorys.value, 0);
-          console.log("树形结构：" + level1.value);
+          console.log('树形结构：'+level1.value);
         } else {
           message.error(data.message);
         }
