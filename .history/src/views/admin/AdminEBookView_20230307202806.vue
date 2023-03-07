@@ -117,7 +117,6 @@ export default defineComponent({
       {
         title: "分类二",
         key: "category2Id",
-        dataIndex: "category2Id"
       },
       {
         title: "文档数",

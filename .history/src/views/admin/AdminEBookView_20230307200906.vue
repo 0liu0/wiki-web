@@ -65,14 +65,11 @@
       <a-form-item label="分类二">
         <a-input v-model:value="ebook.category2Id" />
       </a-form-item> -->
-      <a-form-item label="分类">
-        <a-cascader
-          v-model:value="selectInfo"
-          :options="level1"
-          :field-names="{ label: 'name', value: 'id', children: 'children' }"
-          placeholder="Please select"
-        />
-      </a-form-item>
+      <a-cascader
+        v-model:value="value"
+        :options="options"
+        placeholder="Please select"
+      />
       <a-form-item label="描述">
         <a-input v-model:value="ebook.description" type="text" />
       </a-form-item>
@@ -82,14 +79,12 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
-import type { CascaderProps } from "ant-design-vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
 import { Tool } from "@/util/tool";
 export default defineComponent({
   name: "AdminEBookView",
   setup() {
-    const selectInfo = ref();
     const param = ref();
     param.value = {};
     const ebooks = ref();
@@ -117,7 +112,6 @@ export default defineComponent({
       {
         title: "分类二",
         key: "category2Id",
-        dataIndex: "category2Id"
       },
       {
         title: "文档数",
@@ -165,12 +159,10 @@ export default defineComponent({
     // 控制表单的显现
     const modalLoading = ref(false);
     const modalVisible = ref(false);
-    const ebook = ref();
+    const ebook = ref({});
     const handleOk = () => {
       modalVisible.value = true;
       modalLoading.value = true;
-      ebook.value.category1Id = selectInfo.value[0]
-      ebook.value.category2Id = selectInfo.value[1]
       axios.post("/ebook/save", ebook.value).then((resp) => {
         const data = resp.data;
         if (data.success) {
@@ -198,7 +190,6 @@ export default defineComponent({
     const edit = (record: any) => {
       modalVisible.value = true;
       ebook.value = Tool.copy(record);
-      selectInfo.value = [ebook.value.category1Id,ebook.value.category2Id]
     };
     // 删除提示框
     const confirm = (id: any) => {
@@ -230,18 +221,16 @@ export default defineComponent({
         size: pagination.pageSize,
       });
     };
-    // 得到分类菜单里的所有信息
     const level1 = ref();
     const handleQueryCategory = () => {
-      //
       loading.value = true;
       axios.get("/category/list").then((resp) => {
         loading.value = false;
         const data = resp.data;
         if (data.success) {
-          const categorys = data.content.list;
+          const categorys.value = data.content.list;
           level1.value = [];
-          level1.value = Tool.array2Tree(categorys, 0);
+          level1.value = Tool.array2Tree(categorys.value, 0);
         } else {
           message.error(data.message);
         }
@@ -249,20 +238,17 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      handleQueryCategory(); // 得到分类菜单里的所有信息
       handleQuery({
         page: 1,
         size: pagination.value.pageSize,
       });
     });
     return {
-      selectInfo,
       columns,
       ebooks,
       pagination,
       loading,
       param,
-      level1,
       handleTableChange,
       edit,
       add,

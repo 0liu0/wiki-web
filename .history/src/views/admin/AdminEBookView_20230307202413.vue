@@ -117,7 +117,6 @@ export default defineComponent({
       {
         title: "分类二",
         key: "category2Id",
-        dataIndex: "category2Id"
       },
       {
         title: "文档数",
@@ -165,12 +164,12 @@ export default defineComponent({
     // 控制表单的显现
     const modalLoading = ref(false);
     const modalVisible = ref(false);
-    const ebook = ref();
+    const ebook = ref({});
     const handleOk = () => {
       modalVisible.value = true;
       modalLoading.value = true;
       ebook.value.category1Id = selectInfo.value[0]
-      ebook.value.category2Id = selectInfo.value[1]
+      ebook.value.category2Id = selectInfo.
       axios.post("/ebook/save", ebook.value).then((resp) => {
         const data = resp.data;
         if (data.success) {
@@ -198,7 +197,7 @@ export default defineComponent({
     const edit = (record: any) => {
       modalVisible.value = true;
       ebook.value = Tool.copy(record);
-      selectInfo.value = [ebook.value.category1Id,ebook.value.category2Id]
+      selectInfo.value = 
     };
     // 删除提示框
     const confirm = (id: any) => {

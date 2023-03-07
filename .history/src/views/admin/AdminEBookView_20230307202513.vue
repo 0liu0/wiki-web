@@ -117,7 +117,6 @@ export default defineComponent({
       {
         title: "分类二",
         key: "category2Id",
-        dataIndex: "category2Id"
       },
       {
         title: "文档数",
@@ -198,7 +197,7 @@ export default defineComponent({
     const edit = (record: any) => {
       modalVisible.value = true;
       ebook.value = Tool.copy(record);
-      selectInfo.value = [ebook.value.category1Id,ebook.value.category2Id]
+      selectInfo.value = 
     };
     // 删除提示框
     const confirm = (id: any) => {
