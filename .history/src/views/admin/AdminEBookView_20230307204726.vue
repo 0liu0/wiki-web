@@ -27,11 +27,8 @@
       <template #cover="{ text: cover }">
         <img class="cover" v-if="cover" :src="cover" alt="avatar" />
       </template>
-      <template v-slot:category="{ text, record }">
-        <span
-          >{{ getCategoryName(record.category1Id) }} /
-          {{ getCategoryName(record.category2Id) }}</span
-        >
+      <template v-slot:category="{text,record}">
+        <span>{{getCategoryName(record.category1Id)}} / {{getCategoryName(record.category2Id}}</span>
       </template>
       <template v-slot:action="{ text, record }">
         <a-space size="small">
@@ -110,8 +107,8 @@ export default defineComponent({
         dataIndex: "name",
       },
       {
-        title: "分类",
-        slots: { customRender: "category" },
+        title: '分类',
+        slots: { customRender: 'category'}
       },
       {
         title: "文档数",
@@ -163,8 +160,8 @@ export default defineComponent({
     const handleOk = () => {
       modalVisible.value = true;
       modalLoading.value = true;
-      ebook.value.category1Id = selectInfo.value[0];
-      ebook.value.category2Id = selectInfo.value[1];
+      ebook.value.category1Id = selectInfo.value[0]
+      ebook.value.category2Id = selectInfo.value[1]
       axios.post("/ebook/save", ebook.value).then((resp) => {
         const data = resp.data;
         if (data.success) {
@@ -192,7 +189,7 @@ export default defineComponent({
     const edit = (record: any) => {
       modalVisible.value = true;
       ebook.value = Tool.copy(record);
-      selectInfo.value = [ebook.value.category1Id, ebook.value.category2Id];
+      selectInfo.value = [ebook.value.category1Id,ebook.value.category2Id]
     };
     // 删除提示框
     const confirm = (id: any) => {
@@ -225,7 +222,7 @@ export default defineComponent({
       });
     };
     // 得到分类菜单里的所有信息
-    let listCategoryName: any;
+    let listCategoryName:any
     const level1 = ref();
     const handleQueryCategory = () => {
       //
@@ -235,8 +232,7 @@ export default defineComponent({
         const data = resp.data;
         if (data.success) {
           const categorys = data.content.list;
-          listCategoryName = categorys;
-          console.log("@@@", listCategoryName);
+          listCategoryName = categorys
           level1.value = [];
           level1.value = Tool.array2Tree(categorys, 0);
         } else {
@@ -246,15 +242,10 @@ export default defineComponent({
     };
 
     // 通过category的id得到分类名称
-    const getCategoryName = (id: number) => {
-      let result = "";
-      if (listCategoryName) {
-        listCategoryName.forEach((item: any) => {
-          if (item.id === id) result = item.name;
-        });
-      }
-      return result;
-    };
+    const getCategoryName = (id:number) =>{
+      let result = ""
+      listCategoryName
+    }
     onMounted(() => {
       handleQueryCategory(); // 得到分类菜单里的所有信息
       handleQuery({
@@ -279,7 +270,6 @@ export default defineComponent({
       modalLoading,
       handleOk,
       handleQuery,
-      getCategoryName,
       ebook,
     };
   },
