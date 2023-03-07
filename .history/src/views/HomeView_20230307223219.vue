@@ -1,40 +1,20 @@
 <template>
   <a-layout>
-    <a-layout-sider width="220" style="background: #fff">
-      <!-- <div class="selectall">
-        <template #icon>
-          <MailOutlined />
-        </template>
-        全部
-      </div> -->
+    <a-layout-sider width="200" style="background: #fff">
+      <!-- <div>nihaoa</div> -->
       <a-menu
         v-model:selectedKeys="selectedKeys"
-        style="width: 240px"
+        style="width: 5.12rem"
         mode="inline"
         :open-keys="openKeys"
       >
-        <a-menu-item key="1" @click="selectAll">
-          <template #icon>
-            <MailOutlined />
-          </template>
-          查找全部
-        </a-menu-item>
         <!-- 遍历得到所有的目录 -->
-        <a-sub-menu
-          v-for="(item, index) in level1"
-          :key="item.id"
-          @titleClick="titleClick(item.id)"
-        >
+        <a-sub-menu v-for="(item,index) in level1" :key="item.id" @titleClick="titleClick(item.id)">
           <template #icon>
             <MailOutlined />
           </template>
-          <template #title>{{ item.name }}</template>
-          <a-menu-item
-            v-for="(child, index) in item.children"
-            :key="child.id"
-            @click="subTitleClick(child.id)"
-            >{{ child.name }}</a-menu-item
-          >
+          <template #title>{{item.name}}</template>
+          <a-menu-item v-for="(child,index) in item.children" :key="child.id" @click="subTitleClick(child.id)">{{child.name}}</a-menu-item>
         </a-sub-menu>
       </a-menu>
     </a-layout-sider>
@@ -73,6 +53,7 @@ export default defineComponent({
   setup() {
     const ebooks = ref();
     onMounted(() => {
+      initEBookView(); // 初始化数据，显示全部
       handleQueryCategory(); // 得到分类菜单里的所有数据
     });
     // 初始化
@@ -103,7 +84,6 @@ export default defineComponent({
           const categorys = data.content.list;
           level1.value = [];
           level1.value = Tool.array2Tree(categorys, 0);
-          initEBookView(); // 初始化数据，显示全部
           console.log("value", level1.value);
         } else {
           message.error(data.message);
@@ -112,63 +92,15 @@ export default defineComponent({
     };
 
     // =================按需修改的函数的调用
-    // 定义一个变量里面存储父子菜单的id便于后面进行搜索
-    let selectInfo = ref();
-    // 点击父菜单时触发的操作
     const titleClick = (cid: number) => {
-      selectInfo.value = {};
-      selectInfo.value.category1Id = cid;
-      updateEBooks();
-      console.log(
-        "爸保护你:父" +
-          selectInfo.value.category1Id +
-          ";子:" +
-          selectInfo.value.category2Id
-      );
-    };
+      console.log('爸保护你'+cid);
+    }
     // 点击子菜单时触发的操作
-    const subTitleClick = (cid: number) => {
-      selectInfo.value.category2Id = cid;
-      updateEBooks();
-      console.log(
-        "被偷家了:父" +
-          selectInfo.value.category1Id +
-          ";子:" +
-          selectInfo.value.category2Id
-      );
-    };
-    // 向后端请求数据
-    const updateEBooks = () => {
-      axios.post("/ebook/update", selectInfo.value).then((resp) => {
-        const data = resp.data;
-        if (data.success) {
-          ebooks.value = resp.data.content;
-          // 重置分页按钮
-        } else {
-          message.error(data.message);
-        }
-      });
-    };
-
-    // 搜索全部
-    const selectAll = () => {
-      console.log('nihaoa@@@@@');
-      initEBookView()
+    const subTitleClick = (cid:number) => {
+      console.log('被偷家了'+cid);
     }
 
-    return { ebooks, level1, selectInfo, titleClick, subTitleClick,selectAll};
+    return { ebooks, level1,titleClick,subTitleClick };
   },
 });
 </script>
-
-<style scoped>
-.selectall {
-  width: 240.27px;
-  height: 40px;
-  color: #000000d9;
-  font: 14px;
-  margin: 4px 0px;
-  padding: 0 34px 0px 24px;
-  line-height: 40px;
-}
-</style>

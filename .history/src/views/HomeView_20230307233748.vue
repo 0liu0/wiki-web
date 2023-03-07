@@ -1,24 +1,18 @@
 <template>
   <a-layout>
     <a-layout-sider width="220" style="background: #fff">
-      <!-- <div class="selectall">
+      <div class="selectall">
         <template #icon>
           <MailOutlined />
         </template>
         全部
-      </div> -->
+      </div>
       <a-menu
         v-model:selectedKeys="selectedKeys"
         style="width: 240px"
         mode="inline"
         :open-keys="openKeys"
       >
-        <a-menu-item key="1" @click="selectAll">
-          <template #icon>
-            <MailOutlined />
-          </template>
-          查找全部
-        </a-menu-item>
         <!-- 遍历得到所有的目录 -->
         <a-sub-menu
           v-for="(item, index) in level1"
@@ -150,13 +144,7 @@ export default defineComponent({
       });
     };
 
-    // 搜索全部
-    const selectAll = () => {
-      console.log('nihaoa@@@@@');
-      initEBookView()
-    }
-
-    return { ebooks, level1, selectInfo, titleClick, subTitleClick,selectAll};
+    return { ebooks, level1, selectInfo, titleClick, subTitleClick };
   },
 });
 </script>

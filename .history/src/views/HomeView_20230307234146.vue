@@ -13,7 +13,7 @@
         mode="inline"
         :open-keys="openKeys"
       >
-        <a-menu-item key="1" @click="selectAll">
+        <a-menu-item key="1" @click="">
           <template #icon>
             <MailOutlined />
           </template>
@@ -150,13 +150,7 @@ export default defineComponent({
       });
     };
 
-    // 搜索全部
-    const selectAll = () => {
-      console.log('nihaoa@@@@@');
-      initEBookView()
-    }
-
-    return { ebooks, level1, selectInfo, titleClick, subTitleClick,selectAll};
+    return { ebooks, level1, selectInfo, titleClick, subTitleClick };
   },
 });
 </script>

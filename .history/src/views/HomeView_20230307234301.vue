@@ -153,7 +153,7 @@ export default defineComponent({
     // 搜索全部
     const selectAll = () => {
       console.log('nihaoa@@@@@');
-      initEBookView()
+      ini
     }
 
     return { ebooks, level1, selectInfo, titleClick, subTitleClick,selectAll};

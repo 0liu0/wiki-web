@@ -150,13 +150,7 @@ export default defineComponent({
       });
     };
 
-    // 搜索全部
-    const selectAll = () => {
-      console.log('nihaoa@@@@@');
-      initEBookView()
-    }
-
-    return { ebooks, level1, selectInfo, titleClick, subTitleClick,selectAll};
+    return { ebooks, level1, selectInfo, titleClick, subTitleClick };
   },
 });
 </script>

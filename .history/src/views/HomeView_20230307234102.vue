@@ -13,11 +13,11 @@
         mode="inline"
         :open-keys="openKeys"
       >
-        <a-menu-item key="1" @click="selectAll">
+        <a-menu-item key="1">
           <template #icon>
             <MailOutlined />
           </template>
-          查找全部
+          Navigation One
         </a-menu-item>
         <!-- 遍历得到所有的目录 -->
         <a-sub-menu
@@ -150,13 +150,7 @@ export default defineComponent({
       });
     };
 
-    // 搜索全部
-    const selectAll = () => {
-      console.log('nihaoa@@@@@');
-      initEBookView()
-    }
-
-    return { ebooks, level1, selectInfo, titleClick, subTitleClick,selectAll};
+    return { ebooks, level1, selectInfo, titleClick, subTitleClick };
   },
 });
 </script>

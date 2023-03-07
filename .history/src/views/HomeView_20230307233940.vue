@@ -13,12 +13,12 @@
         mode="inline"
         :open-keys="openKeys"
       >
-        <a-menu-item key="1" @click="selectAll">
+        <a-sub-menu key="sub1">
           <template #icon>
             <MailOutlined />
           </template>
-          查找全部
-        </a-menu-item>
+          <template #title>搜索全部</template>
+        </a-sub-menu>
         <!-- 遍历得到所有的目录 -->
         <a-sub-menu
           v-for="(item, index) in level1"
@@ -150,13 +150,7 @@ export default defineComponent({
       });
     };
 
-    // 搜索全部
-    const selectAll = () => {
-      console.log('nihaoa@@@@@');
-      initEBookView()
-    }
-
-    return { ebooks, level1, selectInfo, titleClick, subTitleClick,selectAll};
+    return { ebooks, level1, selectInfo, titleClick, subTitleClick };
   },
 });
 </script>
