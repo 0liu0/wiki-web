@@ -69,7 +69,7 @@
         <a-input v-model:value="doc.sort" />
       </a-form-item>
       <a-form-item label="内容">
-        <div id="content"></div>
+        <div id="mycontent"></div>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -96,7 +96,7 @@ export default defineComponent({
     const docs = ref();
     const loading = ref(false);
     const treeSelectData = ref();
-    const editor = new E("#content");
+    const editor = ()
     treeSelectData.value = [];
     const columns = [
       {
@@ -120,6 +120,7 @@ export default defineComponent({
     ];
     onMounted(() => {
       handleQuery();
+       = new E("#mycontent");
     });
     // 数据查询
     const level1 = ref();
@@ -140,6 +141,7 @@ export default defineComponent({
     };
 
     // 控制表单的显现
+    // var E = (window as any).wangEditor;
 
     const modalLoading = ref(false);
     const modalVisible = ref(false);
@@ -200,9 +202,7 @@ export default defineComponent({
       doc.value.ebookId = id;
       treeSelectData.value = Tool.copy(level1.value);
       treeSelectData.value.unshift({ id: 0, name: "无" });
-      setTimeout(() => {
-        editor.create();
-      }, 100);
+      editor.create();
     };
     // 编辑表单
     const edit = (record: any) => {
@@ -214,9 +214,6 @@ export default defineComponent({
       setDisable(treeSelectData.value, record.id);
       // 为选择树添加一个"无"
       treeSelectData.value.unshift({ id: 0, name: "无" });
-      setTimeout(() => {
-        editor.create();
-      }, 100);
     };
     // 删除提示框
     const confirm = (id: any) => {

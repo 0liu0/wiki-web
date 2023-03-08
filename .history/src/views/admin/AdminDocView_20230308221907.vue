@@ -10,6 +10,21 @@
     <a-space :size="small">
       <a-button type="primary" @click="add"> 新增 </a-button>
     </a-space>
+    <div id="content" style="border: 1px solid #ccc">
+          <Toolbar
+            style="border-bottom: 1px solid #ccc"
+            :editor="editorRef"
+            :defaultConfig="toolbarConfig"
+            :mode="mode"
+          />
+          <Editor
+            style="height: 500px; overflow-y: hidden"
+            v-model="valueHtml"
+            :defaultConfig="editorConfig"
+            :mode="mode"
+            @onCreated="handleCreated"
+          />
+        </div>
     <a-table
       :columns="columns"
       :row-key="(record) => record.id"
@@ -69,7 +84,7 @@
         <a-input v-model:value="doc.sort" />
       </a-form-item>
       <a-form-item label="内容">
-        <div id="content"></div>
+        
       </a-form-item>
     </a-form>
   </a-modal>
@@ -82,11 +97,13 @@ import { message } from "ant-design-vue";
 import { SmileOutlined } from "@ant-design/icons-vue";
 import { Tool } from "@/util/tool";
 import { useRoute } from "vue-router";
-import E from "wangeditor";
+import E from "wangeditor"
 export default defineComponent({
   name: "AdminDocView",
   components: {
     SmileOutlined,
+    Editor,
+    Toolbar,
   },
   setup() {
     const route = useRoute(); // 得到上一个界面传来的id
@@ -96,7 +113,6 @@ export default defineComponent({
     const docs = ref();
     const loading = ref(false);
     const treeSelectData = ref();
-    const editor = new E("#content");
     treeSelectData.value = [];
     const columns = [
       {
@@ -140,7 +156,6 @@ export default defineComponent({
     };
 
     // 控制表单的显现
-
     const modalLoading = ref(false);
     const modalVisible = ref(false);
     const doc = ref();
@@ -200,9 +215,6 @@ export default defineComponent({
       doc.value.ebookId = id;
       treeSelectData.value = Tool.copy(level1.value);
       treeSelectData.value.unshift({ id: 0, name: "无" });
-      setTimeout(() => {
-        editor.create();
-      }, 100);
     };
     // 编辑表单
     const edit = (record: any) => {
@@ -214,9 +226,6 @@ export default defineComponent({
       setDisable(treeSelectData.value, record.id);
       // 为选择树添加一个"无"
       treeSelectData.value.unshift({ id: 0, name: "无" });
-      setTimeout(() => {
-        editor.create();
-      }, 100);
     };
     // 删除提示框
     const confirm = (id: any) => {

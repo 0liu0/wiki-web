@@ -96,7 +96,7 @@ export default defineComponent({
     const docs = ref();
     const loading = ref(false);
     const treeSelectData = ref();
-    const editor = new E("#content");
+    const editor = new E("content");
     treeSelectData.value = [];
     const columns = [
       {

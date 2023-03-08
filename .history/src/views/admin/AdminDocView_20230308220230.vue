@@ -82,7 +82,8 @@ import { message } from "ant-design-vue";
 import { SmileOutlined } from "@ant-design/icons-vue";
 import { Tool } from "@/util/tool";
 import { useRoute } from "vue-router";
-import E from "wangeditor";
+import '@wangeditor/editor/dist/css/style.css'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 export default defineComponent({
   name: "AdminDocView",
   components: {
@@ -96,7 +97,6 @@ export default defineComponent({
     const docs = ref();
     const loading = ref(false);
     const treeSelectData = ref();
-    const editor = new E("#content");
     treeSelectData.value = [];
     const columns = [
       {
@@ -140,7 +140,6 @@ export default defineComponent({
     };
 
     // 控制表单的显现
-
     const modalLoading = ref(false);
     const modalVisible = ref(false);
     const doc = ref();
@@ -200,9 +199,6 @@ export default defineComponent({
       doc.value.ebookId = id;
       treeSelectData.value = Tool.copy(level1.value);
       treeSelectData.value.unshift({ id: 0, name: "无" });
-      setTimeout(() => {
-        editor.create();
-      }, 100);
     };
     // 编辑表单
     const edit = (record: any) => {
@@ -214,9 +210,6 @@ export default defineComponent({
       setDisable(treeSelectData.value, record.id);
       // 为选择树添加一个"无"
       treeSelectData.value.unshift({ id: 0, name: "无" });
-      setTimeout(() => {
-        editor.create();
-      }, 100);
     };
     // 删除提示框
     const confirm = (id: any) => {

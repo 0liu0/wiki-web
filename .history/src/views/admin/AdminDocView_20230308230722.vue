@@ -69,7 +69,7 @@
         <a-input v-model:value="doc.sort" />
       </a-form-item>
       <a-form-item label="内容">
-        <div id="content"></div>
+        <div></div>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -96,7 +96,7 @@ export default defineComponent({
     const docs = ref();
     const loading = ref(false);
     const treeSelectData = ref();
-    const editor = new E("#content");
+    const editor = new E("div");
     treeSelectData.value = [];
     const columns = [
       {
@@ -202,7 +202,7 @@ export default defineComponent({
       treeSelectData.value.unshift({ id: 0, name: "无" });
       setTimeout(() => {
         editor.create();
-      }, 100);
+      }, 10000);
     };
     // 编辑表单
     const edit = (record: any) => {
@@ -216,7 +216,7 @@ export default defineComponent({
       treeSelectData.value.unshift({ id: 0, name: "无" });
       setTimeout(() => {
         editor.create();
-      }, 100);
+      }, 10);
     };
     // 删除提示框
     const confirm = (id: any) => {

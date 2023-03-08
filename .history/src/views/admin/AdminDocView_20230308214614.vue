@@ -26,8 +26,8 @@
           <a-button type="primary" @click="edit(record)"> 编辑 </a-button>
           <a-button type="danger">
             <a-popconfirm
-              title="确认删除吗?这个结点及其子节点都会被删除哦"
-              ok-text="确认删除"
+              title="确认删除吗?这个结点及其子节点"
+              ok-text="是的"
               cancel-text="我再想想"
               @confirm="confirm(record.id)"
               @cancel="cancel"
@@ -68,9 +68,6 @@
       <a-form-item label="顺序">
         <a-input v-model:value="doc.sort" />
       </a-form-item>
-      <a-form-item label="内容">
-        <div id="content"></div>
-      </a-form-item>
     </a-form>
   </a-modal>
 </template>
@@ -82,21 +79,19 @@ import { message } from "ant-design-vue";
 import { SmileOutlined } from "@ant-design/icons-vue";
 import { Tool } from "@/util/tool";
 import { useRoute } from "vue-router";
-import E from "wangeditor";
 export default defineComponent({
   name: "AdminDocView",
   components: {
     SmileOutlined,
   },
   setup() {
-    const route = useRoute(); // 得到上一个界面传来的id
-    const id = route.query.ebookId;
+    const route = useRoute() // 得到上一个界面传来的id
+    const id = route.query.ebookId
     const param = ref();
     param.value = {};
     const docs = ref();
     const loading = ref(false);
     const treeSelectData = ref();
-    const editor = new E("#content");
     treeSelectData.value = [];
     const columns = [
       {
@@ -140,7 +135,6 @@ export default defineComponent({
     };
 
     // 控制表单的显现
-
     const modalLoading = ref(false);
     const modalVisible = ref(false);
     const doc = ref();
@@ -197,12 +191,9 @@ export default defineComponent({
     const add = () => {
       modalVisible.value = true;
       doc.value = {};
-      doc.value.ebookId = id;
-      treeSelectData.value = Tool.copy(level1.value);
-      treeSelectData.value.unshift({ id: 0, name: "无" });
-      setTimeout(() => {
-        editor.create();
-      }, 100);
+      doc.value.ebookId  = id
+      treeSelectData.value = Tool.copy(level1.value)
+      treeSelectData.value.unshift({id:0,name:'无'})
     };
     // 编辑表单
     const edit = (record: any) => {
@@ -210,13 +201,10 @@ export default defineComponent({
       doc.value = Tool.copy(record);
 
       // 不能选择当前结点以及当前子孙节点作为父结点，否则会使树断开
-      treeSelectData.value = Tool.copy(level1.value);
-      setDisable(treeSelectData.value, record.id);
+      treeSelectData.value = Tool.copy(level1.value)
+      setDisable(treeSelectData.value,record.id)
       // 为选择树添加一个"无"
-      treeSelectData.value.unshift({ id: 0, name: "无" });
-      setTimeout(() => {
-        editor.create();
-      }, 100);
+      treeSelectData.value.unshift({id:0,name:'无'})
     };
     // 删除提示框
     const confirm = (id: any) => {
