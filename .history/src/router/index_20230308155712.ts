@@ -22,7 +22,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/admin/category',
-    name: 'admincategory',
+    name: 'adminecategory',
     component: () => import('../views/admin/AdminCategoryView.vue')
   },
   {
