@@ -59,8 +59,8 @@
           placeholder="Please select"
           allow-clear
           tree-default-expand-all
-          :tree-data="treeSelectData"
-          :fieldNames="{ label: 'name', value: 'id' }"
+          :tree-data="level1"
+          :fieldNames="{label:'name',value:'id'}"
         >
           <template #suffixIcon><SmileOutlined /></template>
         </a-tree-select>
@@ -89,12 +89,12 @@
 import { defineComponent, ref, onMounted } from "vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
-import { SmileOutlined } from "@ant-design/icons-vue";
+import { SmileOutlined } from '@ant-design/icons-vue';
 import { Tool } from "@/util/tool";
 export default defineComponent({
   name: "AdminDocView",
-  components: {
-    SmileOutlined,
+  components:{
+    SmileOutlined
   },
   setup() {
     const param = ref();
@@ -102,7 +102,6 @@ export default defineComponent({
     const docs = ref();
     const loading = ref(false);
     const treeSelectData = ref();
-    treeSelectData.value = [];
     const columns = [
       {
         title: "名称",
@@ -123,9 +122,6 @@ export default defineComponent({
         slots: { customRender: "action" },
       },
     ];
-    onMounted(() => {
-      handleQuery();
-    });
     // 数据查询
     const level1 = ref();
     const handleQuery = () => {
@@ -137,6 +133,7 @@ export default defineComponent({
           docs.value = data.content.list;
           level1.value = [];
           level1.value = Tool.array2Tree(docs.value, 0);
+          tr
         } else {
           message.error(data.message);
         }
@@ -165,54 +162,15 @@ export default defineComponent({
         }
       });
     };
-    /**
-     * 将某节点及其子孙节点全部置为disabled
-     */
-    const setDisable = (treeSelectData: any, id: any) => {
-      // console.log(treeSelectData, id);
-      // 遍历数组，即遍历某一层节点
-      for (let i = 0; i < treeSelectData.length; i++) {
-        const node = treeSelectData[i];
-        if (node.id === id) {
-          // 如果当前节点就是目标节点
-          console.log("disabled", node);
-          // 将目标节点设置为disabled
-          node.disabled = true;
-
-          // 遍历所有子节点，将所有子节点全部都加上disabled
-          const children = node.children;
-          if (Tool.isNotEmpty(children)) {
-            for (let j = 0; j < children.length; j++) {
-              setDisable(children, children[j].id);
-            }
-          }
-        } else {
-          // 如果当前节点不是目标节点，则到其子节点再找找看。
-          const children = node.children;
-          if (Tool.isNotEmpty(children)) {
-            setDisable(children, id);
-          }
-        }
-      }
-    };
-
     // 新增接口
     const add = () => {
       modalVisible.value = true;
       doc.value = {};
-      treeSelectData.value = Tool.copy(level1.value)
-      treeSelectData.value.unshift({id:0,name:'无'})
     };
     // 编辑表单
     const edit = (record: any) => {
       modalVisible.value = true;
       doc.value = Tool.copy(record);
-
-      // 不能选择当前结点以及当前子孙节点作为父结点，否则会使树断开
-      treeSelectData.value = Tool.copy(level1.value)
-      setDisable(treeSelectData.value,record.id)
-      // 为选择树添加一个"无"
-      treeSelectData.value.unshift({id:0,name:'无'})
     };
     // 删除提示框
     const confirm = (id: any) => {
@@ -232,13 +190,16 @@ export default defineComponent({
       console.log(e);
       message.info("已取消");
     };
+
+    onMounted(() => {
+      handleQuery();
+    });
     return {
       columns,
       // docs,
       level1,
       loading,
       param,
-      treeSelectData,
       handleQuery,
       edit,
       add,

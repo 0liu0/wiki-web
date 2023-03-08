@@ -59,7 +59,7 @@
           placeholder="Please select"
           allow-clear
           tree-default-expand-all
-          :tree-data="treeSelectData"
+          :tree-data="level1"
           :fieldNames="{ label: 'name', value: 'id' }"
         >
           <template #suffixIcon><SmileOutlined /></template>
@@ -165,6 +165,34 @@ export default defineComponent({
         }
       });
     };
+    // 新增接口
+    const add = () => {
+      modalVisible.value = true;
+      doc.value = {};
+    };
+    // 编辑表单
+    const edit = (record: any) => {
+      modalVisible.value = true;
+      doc.value = Tool.copy(record);
+    };
+    // 删除提示框
+    const confirm = (id: any) => {
+      axios.delete("/doc/delete/" + id).then((resp) => {
+        const data = resp.data;
+        if (data.success) {
+          // 重新加载列表
+          handleQuery();
+          message.success("删除成功！");
+        } else {
+          message.info("请稍后再试");
+        }
+      });
+    };
+
+    const cancel = (e: MouseEvent) => {
+      console.log(e);
+      message.info("已取消");
+    };
     /**
      * 将某节点及其子孙节点全部置为disabled
      */
@@ -195,50 +223,12 @@ export default defineComponent({
         }
       }
     };
-
-    // 新增接口
-    const add = () => {
-      modalVisible.value = true;
-      doc.value = {};
-      treeSelectData.value = Tool.copy(level1.value)
-      treeSelectData.value.unshift({id:0,name:'无'})
-    };
-    // 编辑表单
-    const edit = (record: any) => {
-      modalVisible.value = true;
-      doc.value = Tool.copy(record);
-
-      // 不能选择当前结点以及当前子孙节点作为父结点，否则会使树断开
-      treeSelectData.value = Tool.copy(level1.value)
-      setDisable(treeSelectData.value,record.id)
-      // 为选择树添加一个"无"
-      treeSelectData.value.unshift({id:0,name:'无'})
-    };
-    // 删除提示框
-    const confirm = (id: any) => {
-      axios.delete("/doc/delete/" + id).then((resp) => {
-        const data = resp.data;
-        if (data.success) {
-          // 重新加载列表
-          handleQuery();
-          message.success("删除成功！");
-        } else {
-          message.info("请稍后再试");
-        }
-      });
-    };
-
-    const cancel = (e: MouseEvent) => {
-      console.log(e);
-      message.info("已取消");
-    };
     return {
       columns,
       // docs,
       level1,
       loading,
       param,
-      treeSelectData,
       handleQuery,
       edit,
       add,

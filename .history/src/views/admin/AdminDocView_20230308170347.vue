@@ -59,7 +59,7 @@
           placeholder="Please select"
           allow-clear
           tree-default-expand-all
-          :tree-data="treeSelectData"
+          :tree-data="level1"
           :fieldNames="{ label: 'name', value: 'id' }"
         >
           <template #suffixIcon><SmileOutlined /></template>
@@ -200,8 +200,6 @@ export default defineComponent({
     const add = () => {
       modalVisible.value = true;
       doc.value = {};
-      treeSelectData.value = Tool.copy(level1.value)
-      treeSelectData.value.unshift({id:0,name:'无'})
     };
     // 编辑表单
     const edit = (record: any) => {
@@ -238,7 +236,6 @@ export default defineComponent({
       level1,
       loading,
       param,
-      treeSelectData,
       handleQuery,
       edit,
       add,

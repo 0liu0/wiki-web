@@ -59,7 +59,7 @@
           placeholder="Please select"
           allow-clear
           tree-default-expand-all
-          :tree-data="treeSelectData"
+          :tree-data="level1"
           :fieldNames="{ label: 'name', value: 'id' }"
         >
           <template #suffixIcon><SmileOutlined /></template>

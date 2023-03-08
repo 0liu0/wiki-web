@@ -59,7 +59,7 @@
           placeholder="Please select"
           allow-clear
           tree-default-expand-all
-          :tree-data="treeSelectData"
+          :tree-data="level1"
           :fieldNames="{ label: 'name', value: 'id' }"
         >
           <template #suffixIcon><SmileOutlined /></template>
@@ -200,19 +200,13 @@ export default defineComponent({
     const add = () => {
       modalVisible.value = true;
       doc.value = {};
-      treeSelectData.value = Tool.copy(level1.value)
-      treeSelectData.value.unshift({id:0,name:'无'})
     };
     // 编辑表单
     const edit = (record: any) => {
       modalVisible.value = true;
       doc.value = Tool.copy(record);
 
-      // 不能选择当前结点以及当前子孙节点作为父结点，否则会使树断开
-      treeSelectData.value = Tool.copy(level1.value)
-      setDisable(treeSelectData.value,record.id)
-      // 为选择树添加一个"无"
-      treeSelectData.value.unshift({id:0,name:'无'})
+      // 不能选择当前结点以及当前子孙节点作为父结点，huishi
     };
     // 删除提示框
     const confirm = (id: any) => {
@@ -238,7 +232,6 @@ export default defineComponent({
       level1,
       loading,
       param,
-      treeSelectData,
       handleQuery,
       edit,
       add,
