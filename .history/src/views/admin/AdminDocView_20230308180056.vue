@@ -65,6 +65,19 @@
           <template #suffixIcon><SmileOutlined /></template>
         </a-tree-select>
       </a-form-item>
+      <a-form-item label="父文档">
+        <a-select v-model:value="doc.parent" ref="select">
+          <a-select-option value="0"> 无 </a-select-option>
+          <a-select-option
+            v-for="(c, index) in level1"
+            :key="c.id"
+            :value="c.id"
+            :disabled="doc.id === c.id"
+          >
+            {{ c.name }}
+          </a-select-option>
+        </a-select>
+      </a-form-item>
       <a-form-item label="顺序">
         <a-input v-model:value="doc.sort" />
       </a-form-item>
@@ -123,7 +136,6 @@ export default defineComponent({
       axios.get("/doc/list").then((resp) => {
         loading.value = false;
         const data = resp.data;
-        console.log(resp);
         if (data.success) {
           docs.value = data.content.list;
           level1.value = [];

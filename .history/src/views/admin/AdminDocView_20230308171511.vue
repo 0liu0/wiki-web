@@ -65,6 +65,19 @@
           <template #suffixIcon><SmileOutlined /></template>
         </a-tree-select>
       </a-form-item>
+      <a-form-item label="父文档">
+        <a-select v-model:value="doc.parent" ref="select">
+          <a-select-option value="0"> 无 </a-select-option>
+          <a-select-option
+            v-for="(c, index) in level1"
+            :key="c.id"
+            :value="c.id"
+            :disabled="doc.id === c.id"
+          >
+            {{ c.name }}
+          </a-select-option>
+        </a-select>
+      </a-form-item>
       <a-form-item label="顺序">
         <a-input v-model:value="doc.sort" />
       </a-form-item>
@@ -78,15 +91,12 @@ import axios from "axios";
 import { message } from "ant-design-vue";
 import { SmileOutlined } from "@ant-design/icons-vue";
 import { Tool } from "@/util/tool";
-import { useRoute } from "vue-router";
 export default defineComponent({
   name: "AdminDocView",
   components: {
     SmileOutlined,
   },
   setup() {
-    const route = useRoute() // 得到上一个界面传来的id
-    const id = route.query.ebookId
     const param = ref();
     param.value = {};
     const docs = ref();
@@ -123,9 +133,9 @@ export default defineComponent({
       axios.get("/doc/list").then((resp) => {
         loading.value = false;
         const data = resp.data;
-        console.log(resp);
         if (data.success) {
           docs.value = data.content.list;
+          console.log('level1的值'+level1.value);
           level1.value = [];
           level1.value = Tool.array2Tree(docs.value, 0);
         } else {
@@ -137,7 +147,7 @@ export default defineComponent({
     // 控制表单的显现
     const modalLoading = ref(false);
     const modalVisible = ref(false);
-    const doc = ref();
+    const doc = ref({});
     const handleOk = () => {
       modalVisible.value = true;
       modalLoading.value = true;
@@ -191,7 +201,6 @@ export default defineComponent({
     const add = () => {
       modalVisible.value = true;
       doc.value = {};
-      doc.value.ebookId  = id
       treeSelectData.value = Tool.copy(level1.value)
       treeSelectData.value.unshift({id:0,name:'无'})
     };
