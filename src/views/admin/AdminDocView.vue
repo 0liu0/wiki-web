@@ -53,6 +53,7 @@
           @change="handleTableChange"
           :pagination="false"
           size="small"
+          defaultExpandAllRows="true"
         >
           <template #name="{ text,record }">
             {{record.sort}} {{text}}
