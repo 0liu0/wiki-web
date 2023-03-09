@@ -119,12 +119,6 @@ export default defineComponent({
       selectInfo.value = {};
       selectInfo.value.category1Id = cid;
       updateEBooks();
-      console.log(
-        "爸保护你:父" +
-          selectInfo.value.category1Id +
-          ";子:" +
-          selectInfo.value.category2Id
-      );
     };
     // 点击子菜单时触发的操作
     const subTitleClick = (cid: number) => {
