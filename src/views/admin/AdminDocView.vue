@@ -55,12 +55,14 @@
           size="small"
           defaultExpandAllRows="true"
         >
-          <template #name="{ text,record }">
-            {{record.sort}} {{text}}
+          <template #name="{ text, record }">
+            {{ record.sort }} {{ text }}
           </template>
           <template v-slot:action="{ text, record }">
             <a-space size="small">
-              <a-button type="primary" @click="edit(record)" size="small"> 编辑 </a-button>
+              <a-button type="primary" @click="edit(record)" size="small">
+                编辑
+              </a-button>
               <a-button type="danger" size="small">
                 <a-popconfirm
                   title="确认删除吗?这个结点及其子节点都会被删除哦"
@@ -84,7 +86,12 @@
             </a-form-item>
           </a-form>
         </p>
-        <a-form v-if="doc" layout="vertical" :model="doc" :labelCol="{ span: 6 }">
+        <a-form
+          v-if="doc"
+          layout="vertical"
+          :model="doc"
+          :labelCol="{ span: 6 }"
+        >
           <a-form-item>
             <a-input v-model:value="doc.name" placeholder="名称" />
           </a-form-item>
@@ -151,7 +158,7 @@ export default defineComponent({
       {
         title: "名称",
         dataIndex: "name",
-        slots: {customRender: 'name'}
+        slots: { customRender: "name" },
       },
       {
         title: "Action",
@@ -181,24 +188,20 @@ export default defineComponent({
     };
 
     // 控制表单的显现
-
-    // const modalLoading = ref(false);
-    // const modalVisible = ref(false);
     const doc = ref();
     const handleOk = () => {
-      // modalVisible.value = true;
-      // modalLoading.value = true;
+      const txt = editor.txt.html()
+      console.log('txt的值为'+txt);
+      if(txt!=''&&txt!=undefined&&txt!=null){
+        doc.value.content = editor.txt.html() // 将内容存放到doc一起发给后端去保存
+      }
       axios.post("/doc/save", doc.value).then((resp) => {
         const data = resp.data;
         if (data.success) {
-          // modalVisible.value = false;
-          // modalLoading.value = false;
           message.success("操作成功！");
           // 重新加载列表
           handleQuery();
         } else {
-          // modalVisible.value = false;
-          // modalLoading.value = false;
           message.error(data.message);
         }
       });
@@ -238,6 +241,7 @@ export default defineComponent({
     const add = () => {
       // modalVisible.value = true;
       doc.value = {};
+      editor.txt.html('');
       doc.value.ebookId = id;
       treeSelectData.value = Tool.copy(level1.value);
       treeSelectData.value.unshift({ id: 0, name: "无" });
@@ -247,9 +251,21 @@ export default defineComponent({
     };
     // 编辑表单
     const edit = (record: any) => {
-      // modalVisible.value = true;
+      doc.value = {};
+      editor.txt.html('');
+      setTimeout(() => {
+        // 发送请求到后端去拿content内容
+        axios.get("/doc/get-content/" + record.id).then((resp) => {
+          const data = resp.data;
+          if (data.success) {
+            doc.value.content = data.content;
+            editor.txt.html(doc.value.content);
+          } else {
+            message.error("网络繁忙，请稍后重试");
+          }
+        });
+      },100);
       doc.value = Tool.copy(record);
-
       // 不能选择当前结点以及当前子孙节点作为父结点，否则会使树断开
       treeSelectData.value = Tool.copy(level1.value);
       setDisable(treeSelectData.value, record.id);
