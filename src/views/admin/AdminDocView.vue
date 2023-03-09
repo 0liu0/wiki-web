@@ -7,72 +7,119 @@
       minHeight: '280px',
     }"
   >
-    <a-space :size="small">
-      <a-button type="primary" @click="add"> 新增 </a-button>
-    </a-space>
-    <a-table
-      :columns="columns"
-      :row-key="(record) => record.id"
-      :data-source="level1"
-      :loading="loading"
-      @change="handleTableChange"
-      :pagination="false"
-    >
-      <template #cover="{ text: cover }">
-        <img class="cover" v-if="cover" :src="cover" alt="avatar" />
-      </template>
-      <template v-slot:action="{ text, record }">
-        <a-space size="small">
-          <a-button type="primary" @click="edit(record)"> 编辑 </a-button>
-          <a-button type="danger">
-            <a-popconfirm
-              title="确认删除吗?这个结点及其子节点都会被删除哦"
-              ok-text="确认删除"
-              cancel-text="我再想想"
-              @confirm="confirm(record.id)"
-              @cancel="cancel"
-            >
-              <a href="#">删除</a>
-            </a-popconfirm>
-          </a-button>
+    <div v-if="!doc">
+      <a-space :size="small">
+        <a-button type="primary" @click="add"> 新增 </a-button>
+      </a-space>
+      <a-table
+        :columns="columns"
+        :row-key="(record) => record.id"
+        :data-source="level1"
+        :loading="loading"
+        @change="handleTableChange"
+        :pagination="false"
+      >
+        <template #cover="{ text: cover }">
+          <img class="cover" v-if="cover" :src="cover" alt="avatar" />
+        </template>
+        <template v-slot:action="{ text, record }">
+          <a-space size="small">
+            <a-button type="primary" @click="edit(record)"> 编辑 </a-button>
+            <a-button type="danger">
+              <a-popconfirm
+                title="确认删除吗?这个结点及其子节点都会被删除哦"
+                ok-text="确认删除"
+                cancel-text="我再想想"
+                @confirm="confirm(record.id)"
+                @cancel="cancel"
+              >
+                <a href="#">删除</a>
+              </a-popconfirm>
+            </a-button>
+          </a-space>
+        </template>
+      </a-table>
+    </div>
+    <a-row v-if="doc" :gutter="24">
+      <a-col :span="8">
+        <a-space :size="small">
+          <a-button type="primary" @click="add" size="small"> 新增 </a-button>
         </a-space>
-      </template>
-    </a-table>
-  </a-layout-content>
-  <a-modal
-    title="文档表单"
-    v-model:visible="modalVisible"
-    :confirm-loading="modalLoading"
-    @ok="handleOk"
-    :mask="true"
-  >
-    <a-form :model="doc" :labelCol="{ span: 6 }">
-      <a-form-item label="名称">
-        <a-input v-model:value="doc.name" />
-      </a-form-item>
-      <a-form-item label="父文档">
-        <a-tree-select
-          v-model:value="doc.parent"
-          show-search
-          style="width: 100%"
-          :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-          placeholder="Please select"
-          allow-clear
-          tree-default-expand-all
-          :tree-data="treeSelectData"
-          :fieldNames="{ label: 'name', value: 'id' }"
+        <a-table
+          :columns="columns"
+          :row-key="(record) => record.id"
+          :data-source="level1"
+          :loading="loading"
+          @change="handleTableChange"
+          :pagination="false"
+          size="small"
         >
-          <template #suffixIcon><SmileOutlined /></template>
-        </a-tree-select>
-      </a-form-item>
-      <a-form-item label="顺序">
-        <a-input v-model:value="doc.sort" />
-      </a-form-item>
-      <a-form-item label="内容">
-        <div id="content"></div>
-      </a-form-item>
-    </a-form>
-  </a-modal>
+          <template #name="{ text,record }">
+            {{record.sort}} {{text}}
+          </template>
+          <template v-slot:action="{ text, record }">
+            <a-space size="small">
+              <a-button type="primary" @click="edit(record)" size="small"> 编辑 </a-button>
+              <a-button type="danger" size="small">
+                <a-popconfirm
+                  title="确认删除吗?这个结点及其子节点都会被删除哦"
+                  ok-text="确认删除"
+                  cancel-text="我再想想"
+                  @confirm="confirm(record.id)"
+                  @cancel="cancel"
+                >
+                  <a href="#">删除</a>
+                </a-popconfirm>
+              </a-button>
+            </a-space>
+          </template>
+        </a-table>
+      </a-col>
+      <a-col :span="16">
+        <p>
+          <a-form layout="inline" :model="param">
+            <a-form-item>
+              <a-button type="primary" @click="handleOk"> 保存 </a-button>
+            </a-form-item>
+          </a-form>
+        </p>
+        <a-form v-if="doc" layout="vertical" :model="doc" :labelCol="{ span: 6 }">
+          <a-form-item>
+            <a-input v-model:value="doc.name" placeholder="名称" />
+          </a-form-item>
+          <a-form-item>
+            <a-tree-select
+              v-model:value="doc.parent"
+              show-search
+              style="width: 100%"
+              :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+              placeholder="父文档"
+              allow-clear
+              tree-default-expand-all
+              :tree-data="treeSelectData"
+              :fieldNames="{ label: 'name', value: 'id' }"
+            >
+              <template #suffixIcon><SmileOutlined /></template>
+            </a-tree-select>
+          </a-form-item>
+          <a-form-item>
+            <a-input v-model:value="doc.sort" placeholder="顺序" />
+          </a-form-item>
+          <a-form-item>
+            <div id="content" placeholder="内容"></div>
+          </a-form-item>
+        </a-form>
+      </a-col>
+    </a-row>
+    <!-- <a-modal
+          title="文档表单"
+          v-model:visible="modalVisible"
+          :confirm-loading="modalLoading"
+          @ok="handleOk"
+          :mask="true"
+        > -->
+    <!-- </a-modal> -->
+  </a-layout-content>
 </template>
 
 <script lang="ts">
@@ -97,20 +144,13 @@ export default defineComponent({
     const loading = ref(false);
     const treeSelectData = ref();
     const editor = new E("#content");
+    editor.config.zIndex = 0;
     treeSelectData.value = [];
     const columns = [
       {
         title: "名称",
         dataIndex: "name",
-      },
-      {
-        title: "父文档",
-        key: "parent",
-        dataIndex: "parent",
-      },
-      {
-        title: "顺序",
-        dataIndex: "sort",
+        slots: {customRender: 'name'}
       },
       {
         title: "Action",
@@ -141,23 +181,23 @@ export default defineComponent({
 
     // 控制表单的显现
 
-    const modalLoading = ref(false);
-    const modalVisible = ref(false);
+    // const modalLoading = ref(false);
+    // const modalVisible = ref(false);
     const doc = ref();
     const handleOk = () => {
-      modalVisible.value = true;
-      modalLoading.value = true;
+      // modalVisible.value = true;
+      // modalLoading.value = true;
       axios.post("/doc/save", doc.value).then((resp) => {
         const data = resp.data;
         if (data.success) {
-          modalVisible.value = false;
-          modalLoading.value = false;
+          // modalVisible.value = false;
+          // modalLoading.value = false;
           message.success("操作成功！");
           // 重新加载列表
           handleQuery();
         } else {
-          modalVisible.value = false;
-          modalLoading.value = false;
+          // modalVisible.value = false;
+          // modalLoading.value = false;
           message.error(data.message);
         }
       });
@@ -195,7 +235,7 @@ export default defineComponent({
 
     // 新增接口
     const add = () => {
-      modalVisible.value = true;
+      // modalVisible.value = true;
       doc.value = {};
       doc.value.ebookId = id;
       treeSelectData.value = Tool.copy(level1.value);
@@ -206,7 +246,7 @@ export default defineComponent({
     };
     // 编辑表单
     const edit = (record: any) => {
-      modalVisible.value = true;
+      // modalVisible.value = true;
       doc.value = Tool.copy(record);
 
       // 不能选择当前结点以及当前子孙节点作为父结点，否则会使树断开
@@ -247,8 +287,8 @@ export default defineComponent({
       add,
       cancel,
       confirm,
-      modalVisible,
-      modalLoading,
+      // modalVisible,
+      // modalLoading,
       handleOk,
       doc,
     };
