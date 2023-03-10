@@ -173,7 +173,7 @@ export default defineComponent({
     const level1 = ref();
     const handleQuery = () => {
       loading.value = true;
-      axios.get("/doc/list").then((resp) => {
+      axios.get("/doc/get-one/"+id).then((resp) => {
         loading.value = false;
         const data = resp.data;
         console.log(resp);
