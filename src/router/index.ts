@@ -29,6 +29,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/admin/doc',
     name: 'admindoc',
     component: () => import('../views/admin/AdminDocView.vue')
+  },
+  {
+    path: '/doc',
+    name: 'doc',
+    component: () => import('../views/DocView.vue')
   }
 ]
 

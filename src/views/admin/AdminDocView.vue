@@ -114,11 +114,26 @@
             <a-input v-model:value="doc.sort" placeholder="顺序" />
           </a-form-item>
           <a-form-item>
+            <a-button type="primary" @click="handlePreviewContent">
+              <EyeOutlined /> 内容预览
+            </a-button>
+          </a-form-item>
+          <a-form-item>
             <div id="content" placeholder="内容"></div>
           </a-form-item>
         </a-form>
       </a-col>
     </a-row>
+    <a-drawer
+      v-model:visible="drawerVisible"
+      title="内容预览"
+      width="900"
+      placement="right"
+      :closable="false"
+      @close="onDrawerClose"
+    >
+      <div class="wangeditor" :innerHTML="previewHTML"></div>
+    </a-drawer>
     <!-- <a-modal
           title="文档表单"
           v-model:visible="modalVisible"
@@ -134,7 +149,7 @@
 import { defineComponent, ref, onMounted } from "vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
-import { SmileOutlined } from "@ant-design/icons-vue";
+import { SmileOutlined, EyeOutlined } from "@ant-design/icons-vue";
 import { Tool } from "@/util/tool";
 import { useRoute } from "vue-router";
 import E from "wangeditor";
@@ -142,6 +157,7 @@ export default defineComponent({
   name: "AdminDocView",
   components: {
     SmileOutlined,
+    EyeOutlined,
   },
   setup() {
     const route = useRoute(); // 得到上一个界面传来的id
@@ -173,7 +189,7 @@ export default defineComponent({
     const level1 = ref();
     const handleQuery = () => {
       loading.value = true;
-      axios.get("/doc/get-one/"+id).then((resp) => {
+      axios.get("/doc/get-one/" + id).then((resp) => {
         loading.value = false;
         const data = resp.data;
         console.log(resp);
@@ -190,10 +206,10 @@ export default defineComponent({
     // 控制表单的显现
     const doc = ref();
     const handleOk = () => {
-      const txt = editor.txt.html()
-      console.log('txt的值为'+txt);
-      if(txt!=''&&txt!=undefined&&txt!=null){
-        doc.value.content = editor.txt.html() // 将内容存放到doc一起发给后端去保存
+      const txt = editor.txt.html();
+      console.log("txt的值为" + txt);
+      if (txt != "" && txt != undefined && txt != null) {
+        doc.value.content = editor.txt.html(); // 将内容存放到doc一起发给后端去保存
       }
       axios.post("/doc/save", doc.value).then((resp) => {
         const data = resp.data;
@@ -241,7 +257,7 @@ export default defineComponent({
     const add = () => {
       // modalVisible.value = true;
       doc.value = {};
-      editor.txt.html('');
+      editor.txt.html("");
       doc.value.ebookId = id;
       treeSelectData.value = Tool.copy(level1.value);
       treeSelectData.value.unshift({ id: 0, name: "无" });
@@ -252,7 +268,7 @@ export default defineComponent({
     // 编辑表单
     const edit = (record: any) => {
       doc.value = {};
-      editor.txt.html('');
+      editor.txt.html("");
       setTimeout(() => {
         // 发送请求到后端去拿content内容
         axios.get("/doc/get-content/" + record.id).then((resp) => {
@@ -264,7 +280,7 @@ export default defineComponent({
             message.error("网络繁忙，请稍后重试");
           }
         });
-      },100);
+      }, 100);
       doc.value = Tool.copy(record);
       // 不能选择当前结点以及当前子孙节点作为父结点，否则会使树断开
       treeSelectData.value = Tool.copy(level1.value);
@@ -293,12 +309,28 @@ export default defineComponent({
       console.log(e);
       message.info("已取消");
     };
+
+    // 富文本预览
+    const drawerVisible = ref(false);
+    const previewHTML = ref();
+    const handlePreviewContent = () => {
+      const html = editor.txt.html();
+      previewHTML.value = html;
+      drawerVisible.value = true;
+    };
+    const onDrawerClose = () => {
+      drawerVisible.value = false;
+    };
     return {
       columns,
       level1,
       loading,
       param,
       treeSelectData,
+      drawerVisible,
+      previewHTML,
+      handlePreviewContent,
+      onDrawerClose,
       handleQuery,
       edit,
       add,
