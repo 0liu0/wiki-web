@@ -57,7 +57,7 @@
         <a-input v-model:value="user.name" />
       </a-form-item>
       <a-form-item label="密码" v-show="!user.id">
-        <a-input v-model:value="user.password" type="password"/>
+        <a-input v-model:value="user.password" type="password" />
       </a-form-item>
     </a-form>
   </a-modal>
@@ -69,6 +69,8 @@ import type { CascaderProps } from "ant-design-vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
 import { Tool } from "@/util/tool";
+declare let hexMd5: any;
+declare let KEY: any;
 export default defineComponent({
   name: "AdminEBookView",
   setup() {
@@ -135,6 +137,7 @@ export default defineComponent({
     const handleOk = () => {
       modalVisible.value = true;
       modalLoading.value = true;
+      user.value.password = hexMd5(user.value.password + KEY)
       axios.post("/user/save", user.value).then((resp) => {
         const data = resp.data;
         if (data.success) {
