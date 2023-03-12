@@ -26,6 +26,9 @@
     >
       <template v-slot:action="{ text, record }">
         <a-space size="small">
+          <a-button type="primary" @click="resetPassword(record)">
+            重置密码
+          </a-button>
           <a-button type="primary" @click="edit(record)"> 编辑 </a-button>
           <a-button type="danger">
             <a-popconfirm
@@ -58,6 +61,19 @@
       </a-form-item>
       <a-form-item label="密码" v-show="!user.id">
         <a-input v-model:value="user.password" type="password" />
+      </a-form-item>
+    </a-form>
+  </a-modal>
+  <a-modal
+    title="重置密码"
+    v-model:visible="resetModalVisible"
+    :confirm-loading="resetModalLoading"
+    @ok="resetHandleOk"
+    :mask="true"
+  >
+    <a-form :model="user" :labelCol="{ span: 6 }">
+      <a-form-item label="新密码">
+        <a-input v-model:value="user.password" type="text" />
       </a-form-item>
     </a-form>
   </a-modal>
@@ -137,7 +153,7 @@ export default defineComponent({
     const handleOk = () => {
       modalVisible.value = true;
       modalLoading.value = true;
-      user.value.password = hexMd5(user.value.password + KEY)
+      user.value.password = hexMd5(user.value.password + KEY);
       axios.post("/user/save", user.value).then((resp) => {
         const data = resp.data;
         if (data.success) {
@@ -203,6 +219,48 @@ export default defineComponent({
         size: pagination.value.pageSize,
       });
     });
+    // 验证密码合不合格
+    function validatePassword(password: any) {
+      // 正则表达式匹配
+      var regExp = /^(?=.*[0-9])(?=.*[a-zA-Z])[a-zA-Z0-9]{6,32}$/;
+      return regExp.test(password);
+    }
+
+    // 重置密码
+    let resetModalVisible = ref(false);
+    let resetModalLoading = ref(false);
+    const resetPassword = (info: any) => {
+      resetModalVisible.value = true;
+      user.value = Tool.copy(info);
+      user.value.password = "";
+    };
+    const resetHandleOk = () => {
+      resetModalVisible.value = true;
+      resetModalLoading.value = true;
+      if (!validatePassword(user.value.password)) {
+        message.error("【密码】至少包含 数字和英文，长度6-32");
+        resetModalLoading.value = false;
+        return;
+      }
+      user.value.password = hexMd5(user.value.password + KEY);
+      axios.post("/user/reset-pwd", user.value).then((resp) => {
+        const data = resp.data;
+        if (data.success) {
+          resetModalVisible.value = false;
+          resetModalLoading.value = false;
+          message.success("操作成功！");
+          // 重新加载列表
+          handleQuery({
+            page: pagination.value.current,
+            size: pagination.value.pageSize,
+          });
+        } else {
+          resetModalVisible.value = false;
+          resetModalLoading.value = false;
+          message.error(data.message);
+        }
+      });
+    };
     return {
       selectInfo,
       columns,
@@ -210,11 +268,15 @@ export default defineComponent({
       pagination,
       loading,
       param,
+      resetModalVisible,
+      resetModalLoading,
       handleTableChange,
+      resetPassword,
       edit,
       add,
       cancel,
       confirm,
+      resetHandleOk,
       modalVisible,
       modalLoading,
       handleOk,
