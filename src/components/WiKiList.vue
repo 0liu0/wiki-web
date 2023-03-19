@@ -9,10 +9,18 @@
       <template #renderItem="{ item }">
         <a-list-item key="item.name">
           <template #actions>
-            <span v-for="{ type, text } in actions" :key="type">
-              <component :is="type" style="margin-right: 8px" />
-              {{ text }}
-            </span>
+            <span>
+                <component v-bind:is="'FileOutlined'" style="margin-right: 8px" />
+                {{ item.docCount }}
+              </span>
+              <span>
+                <component v-bind:is="'UserOutlined'" style="margin-right: 8px" />
+                {{ item.viewCount }}
+              </span>
+              <span>
+                <component v-bind:is="'LikeOutlined'" style="margin-right: 8px" />
+                {{ item.voteCount }}
+              </span>
           </template>
           <a-list-item-meta :description="item.description">
             <template #title>
@@ -28,9 +36,9 @@
 
 <script lang="ts">
 import {
-  StarOutlined,
+  FileOutlined,
   LikeOutlined,
-  MessageOutlined,
+  UserOutlined,
 } from "@ant-design/icons-vue";
 import { defineComponent } from "vue";
 
@@ -38,18 +46,12 @@ export default defineComponent({
   name: "WiKiList",
   props:['ebooks'],
   components: {
-    StarOutlined,
+    FileOutlined,
     LikeOutlined,
-    MessageOutlined,
+    UserOutlined
   },
   setup() {
-    const actions: Record<string, string>[] = [ // 图标
-      { type: "StarOutlined", text: "156" },
-      { type: "LikeOutlined", text: "156" },
-      { type: "MessageOutlined", text: "2" },
-    ];
     return {
-      actions,
     };
   },
 });
